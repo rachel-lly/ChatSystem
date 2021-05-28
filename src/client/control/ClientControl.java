@@ -4,6 +4,9 @@ import GUI.friend.Friend;
 import GUI.utils.Utils;
 import client.ChatRecord.FileFolder;
 import org.apache.commons.codec.binary.Hex;
+import server.database.MySqlLoader;
+import server.user.UsersContainer;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -65,6 +68,25 @@ public class ClientControl {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void addGroupChat(String groupChatName) throws MsgException {
+        if (!this.clientChannel.isOpen()) {
+            throw new MsgException(1, "未连接到服务器");
+        }
+
+        UsersContainer.INSTANCE.setGroupNameList(groupChatName);
+
+    }
+
+    public ArrayList<String> addGroupChat() throws MsgException {
+        if (!this.clientChannel.isOpen()) {
+            throw new MsgException(1, "未连接到服务器");
+        }
+
+        return UsersContainer.INSTANCE.getGroupNameList();
+
     }
 
     public void deleteFriends(ArrayList<Friend> friends) throws MsgException {
@@ -198,6 +220,8 @@ public class ClientControl {
             System.out.println(Hex.encodeHexString(datas));
         }
     }
+
+
 
     class LoopingMessageHandler implements CompletionHandler<Integer, Object> {
         public AsynchronousSocketChannel sc;

@@ -68,4 +68,12 @@ public class UsersContainer {
     public void loadData() {
         this.mysqlLoader.loadUsers(this.users);
     }
+
+    public ArrayList<String> getGroupNameList(){
+        return this.mysqlLoader.getGroupName();
+    }
+
+    public void setGroupNameList(String groupNameList){
+        this.mysqlLoader.setGroupName(groupNameList);
+    }
 }

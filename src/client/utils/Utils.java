@@ -167,6 +167,8 @@ public class Utils {
             return data;
         }
 
+
+
         public static ArrayList<Friend> friendListUnPack(ByteBuffer msg, String publicKey) {
             ArrayList<Friend> resArray = new ArrayList<>();
             byte[] data = msg.array(),

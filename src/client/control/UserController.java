@@ -13,12 +13,15 @@ import java.util.HashMap;
 public class UserController {
 
     public ArrayList<Friend> applyFriendList;
+    public ArrayList<Friend> friendList;
+
+    public ArrayList<String> groupNameList;
 
 
     public ClientControl client;
     public Login loggingLogin;
     public FriendGUI friendGUI;
-    public ArrayList<Friend> friendList;
+
     public HashMap<String, ChatGUI> chattingPanel;
     public String id;
 
@@ -55,8 +58,17 @@ public class UserController {
                 this.chattingPanel.get(friend.id).update();
             }
         }
-        this.friendGUI.updateFriend();
+        this.friendGUI.updateInformation();
     }
+
+//    public void updateGroupNameList(ArrayList<String> groupNameList) {
+//        this.friendGUI.groupNameList = groupNameList;
+//
+//        for (String name: groupNameList) {
+//
+//        }
+//        this.friendGUI.updateInformation();
+//    }
 
     public void updateApplyFriendList(ArrayList<Friend> applyFriendsList) {
         this.friendGUI.applyFriendsList = applyFriendsList;
@@ -105,7 +117,19 @@ public class UserController {
         return true;
     }
 
-    public void deleteFriends(ArrayList<Friend> friends) {
+    public boolean addGroupChat(String groupChatName) {
+        try {
+            this.client.addGroupChat(groupChatName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+
+
+   public void deleteFriends(ArrayList<Friend> friends) {
         try {
             this.client.deleteFriends(friends);
         } catch (Exception e) {

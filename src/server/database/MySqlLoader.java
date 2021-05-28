@@ -19,11 +19,22 @@ public class MySqlLoader {
                     "PRIMARY KEY ( `id` )" +
                     ");";
 
+
+    public static final String GROUP_CHAT_TABLE =
+            "CREATE TABLE IF NOT EXISTS `groupChatNameList`(" +
+                    "`groupChatName` VARCHAR(20) NOT NULL, " +
+                    "PRIMARY KEY ( `groupChatName` )" +
+                    ");";
+
+
     public static final String STANDARD_FRIEND_TABLE =
             "CREATE TABLE IF NOT EXISTS `friendList`(" +
                     "`srcid` VARCHAR(20) NOT NULL, " +
                     "`dstid` VARCHAR(20) NOT NULL " +
                     ");";
+
+    public static final String GET_GROUP_NAME = "SELECT * FROM groupChatNameList;";
+    public static final String SET_GROUP_NAME = "insert into groupChatNameList values(\"%s\");";
 
     public static final String STANDARD_INSERT_FRIEND_STRING = "insert into friendList values(\"%s\",\"%s\");";
     public static final String STANDARD_SEARCH_FRIEND_STRING = "SELECT distinct f1.dstId FROM friendlist as f1 INNER JOIN friendlist as f2 ON f1.srcId = f2.dstId AND f2.srcId = f1.dstId WHERE f1.srcId = \"%s\";";
@@ -70,6 +81,7 @@ public class MySqlLoader {
             this.statement.executeQuery("use LiveChat;");
             this.statement.execute(STANDARD_TABLE);
             this.statement.execute(STANDARD_FRIEND_TABLE);
+            this.statement.execute(GROUP_CHAT_TABLE);
         } catch (SQLException se) {
             se.printStackTrace();
         }
@@ -86,6 +98,33 @@ public class MySqlLoader {
             se.printStackTrace();
         }
     }
+
+    public ArrayList<String> getGroupName(){
+        ArrayList<String> res = new ArrayList<>();
+
+        try {
+            ResultSet rs = this.statement.executeQuery(GET_GROUP_NAME);
+
+            while (rs.next()){
+                res.add(rs.getString("groupChatName"));
+            }
+            rs.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return res;
+    }
+
+    public void setGroupName(String groupName){
+
+        try {
+            this.statement.execute(String.format(SET_GROUP_NAME,groupName));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 
     public void insertUsers() {
     }

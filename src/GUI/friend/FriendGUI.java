@@ -3,6 +3,8 @@ package GUI.friend;
 import GUI.login.Login;
 import GUI.utils.Utils;
 import client.control.UserController;
+import server.user.UsersContainer;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -20,19 +22,30 @@ public class FriendGUI {
     static String iconURL = "/GUI/assets/chat_icon.png";
 
     public JFrame frame;
+
     public ArrayList<Friend> friendsList;
     public ArrayList<Friend> applyFriendsList;
+    public ArrayList<String> groupNameList;
+
+    public DefaultMutableTreeNode treeNode;
+
     public DefaultMutableTreeNode rootNode, onLine, offLine;
+
+    public DefaultMutableTreeNode groupChat;
+
     public UserController callback;
     public JButton addFriendsButton,
             deleteFriendButton, showApplicationButton;
+
+    public JButton addGroupChatButton;
+
     public boolean isDelete = false;
     public JTree tree;
 
 
 
     public FriendGUI(UserController callback) {
-        this(new ArrayList<>(), new ArrayList<>(), callback);
+        this(new ArrayList<>(), new ArrayList<>(),callback);
     }
 
     public FriendGUI(ArrayList<Friend> friendsList,
@@ -40,14 +53,17 @@ public class FriendGUI {
                      UserController callback) {
         this.friendsList = friendsList;
         this.applyFriendsList = applyFriendsList;
+        this.groupNameList = UsersContainer.INSTANCE.getGroupNameList();
         this.callback = callback;
         init();
-        updateFriend();
+        updateInformation();
     }
 
-    public void updateFriend() {
+    public void updateInformation() {
         this.onLine.removeAllChildren();
         this.offLine.removeAllChildren();
+
+        this.groupChat.removeAllChildren();
 
         for (Friend friend : this.friendsList) {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(friend);
@@ -57,11 +73,19 @@ public class FriendGUI {
                 this.offLine.add(node);
             }
         }
+
+        groupNameList = UsersContainer.INSTANCE.getGroupNameList();
+        for(String groupName : groupNameList){
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(groupName);
+            this.groupChat.add(node);
+        }
+
+
         this.tree.updateUI();
     }
 
     public void init() {
-        this.frame = new JFrame("好友列表");
+        this.frame = new JFrame("聊天列表");
         this.frame.setSize(400, 450);
         this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(Login.class.getResource(iconURL))).getImage());
         this.frame.setLocationRelativeTo(null);
@@ -70,14 +94,23 @@ public class FriendGUI {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(createTool(), BorderLayout.NORTH);
 
+        treeNode = new DefaultMutableTreeNode("聊天");
+
         rootNode = new DefaultMutableTreeNode("好友");
+        treeNode.add(rootNode);
+
         onLine = new DefaultMutableTreeNode("在线好友");
         rootNode.add(onLine);
         offLine = new DefaultMutableTreeNode("离线好友");
         rootNode.add(offLine);
 
-        this.tree = new JTree(rootNode);
+        groupChat = new DefaultMutableTreeNode("群聊");
+        treeNode.add(groupChat);
+
+        this.tree = new JTree(treeNode);
         this.tree.setShowsRootHandles(true);
+
+
         this.tree.addTreeSelectionListener(e -> {
             try {
                 Friend friend = (Friend) ((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
@@ -90,15 +123,18 @@ public class FriendGUI {
                             "警告",
                             JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                         callback.deleteFriends(tempArrayList);
+
+                        Utils.showInformationMsg("删除好友成功","提示",null);
                     }
                 } else {
                     callback.openChattingPanel(friend);
                 }
             } catch (Exception e1) {
-                e1.printStackTrace();
+
             }
         });
         panel.add(new JScrollPane(tree), BorderLayout.CENTER);
+
         this.frame.setContentPane(panel);
     }
 
@@ -134,15 +170,59 @@ public class FriendGUI {
         });
         jp.add(deleteFriendButton);
 
-        showApplicationButton = Utils.createButton("通知");
-        showApplicationButton.addActionListener(e -> applicationList());
-        jp.add(showApplicationButton);
+        addGroupChatButton = Utils.createButton("新建群聊");
+        addGroupChatButton.addActionListener( e -> addGroupChat());
+        jp.add(addGroupChatButton);
+
+//        showApplicationButton = Utils.createButton("通知");
+//        showApplicationButton.addActionListener(e -> applicationList());
+//        jp.add(showApplicationButton);
 
         return jp;
     }
 
+    private void addGroupChat() {
+        JDialog dialog = new JDialog(this.frame, "请输入创建的群聊名:", true);
+        dialog.setBounds(400, 300, 300, 100);
+        dialog.setLayout(new BorderLayout());
+
+        JButton confirm = Utils.createButton("创建");
+
+        JTextField idFieldArea = new JTextField();
+
+        confirm.addActionListener(e -> {
+            if ("".equals(idFieldArea.getText())) {
+                return;
+            }
+
+
+            callback.addGroupChat(idFieldArea.getText());
+            Utils.showInformationMsg("创建群聊成功","提示",null);
+            updateInformation();
+            dialog.setVisible(false);
+
+        });
+
+        idFieldArea.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    confirm.doClick();
+                }
+            }
+        });
+
+        idFieldArea.setFont(new Font("menlo", Font.BOLD, 17));
+        dialog.add(idFieldArea, BorderLayout.NORTH);
+        dialog.add(confirm, BorderLayout.SOUTH);
+        dialog.setLocationRelativeTo(this.frame);
+        dialog.setVisible(true);
+
+
+    }
     public void addFriendInput() {
-        JDialog dialog = new JDialog(this.frame, "请输入好友ID:", true);
+        JDialog dialog = new JDialog(this.frame, "请输入添加的好友ID:", true);
         dialog.setBounds(400, 300, 300, 100);
         dialog.setLayout(new BorderLayout());
 
@@ -160,7 +240,6 @@ public class FriendGUI {
             ArrayList<Friend> tempArrayList = new ArrayList<>();
             tempArrayList.add(new Friend(idFieldArea.getText(), ""));
             callback.addFriends(tempArrayList);
-            Utils.showInformationMsg("好友申请已发送!", "通知", frame);
             dialog.setVisible(false);
         });
 
