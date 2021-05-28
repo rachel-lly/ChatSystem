@@ -1,13 +1,11 @@
 package GUI.chat;
 
 
-
 import GUI.friend.Friend;
-import client.UserController;
+import client.control.UserController;
 import client.ChatRecord.ChatRecord;
 import client.ChatRecord.ChatRecordManager;
 import client.utils.Utils;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
@@ -20,7 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ChattGUI {
+
+public class ChatGUI {
+
+
     public JFrame frame;
     public JButton sendButton;
     public JButton toolImageButton, toolFileButton;
@@ -32,7 +33,7 @@ public class ChattGUI {
     public Friend friend;
     public ArrayList<ChatRecord> chatRecords;
 
-    String chatIconURL = "/GUI/assets/chat_icon.png";
+    static String chatIconURL = "/GUI/assets/chat_icon.png";
 
     public void update() {
         this.frame.setTitle(friend.toString());
@@ -53,12 +54,12 @@ public class ChattGUI {
         }
     }
 
-    public ChattGUI(UserController callback, Friend friend) {
+    public ChatGUI(UserController callback, Friend friend) {
         this.friend = friend;
         this.callback = callback;
 
         try {
-            this.chatRecords = ChatRecordManager.readChattingRecord(callback.id, friend.id);
+            this.chatRecords = ChatRecordManager.readChatRecord(callback.id, friend.id);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +70,7 @@ public class ChattGUI {
         Dimension d = t.getScreenSize();
 
         frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 700, 700);
-        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChattGUI.class.getResource(chatIconURL))).getImage());
+        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatGUI.class.getResource(chatIconURL))).getImage());
         frame.setResizable(true);
         frame.setLayout(new BorderLayout());
         frame.add(creatSouth(), BorderLayout.SOUTH);
@@ -281,7 +282,7 @@ public class ChattGUI {
         @Override
         public void windowClosing(WindowEvent e) {
             try {
-                ChatRecordManager.saveChattingRecord(callback.id, friend.id, chatRecords);
+                ChatRecordManager.saveChatRecord(callback.id, friend.id, chatRecords);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

@@ -1,10 +1,8 @@
 package client.utils;
 
-
 import GUI.friend.Friend;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-
 import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,9 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.security.KeyPairGenerator.getInstance;
 
 
 public class Utils {
@@ -363,27 +359,6 @@ public class Utils {
     public static class RSAUtils {
         public static final String RSA_ALGORITHM = "RSA";
 
-        public static Map<String, String> createKeys(int keySize) {
-            KeyPairGenerator kpg;
-            try {
-                kpg = getInstance(RSA_ALGORITHM);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalArgumentException("No such algorithm-->[" + RSA_ALGORITHM + "]");
-            }
-
-            kpg.initialize(keySize);
-            KeyPair keyPair = kpg.generateKeyPair();
-            Key publicKey = keyPair.getPublic();
-            String publicKeyStr = Base64.encodeBase64URLSafeString(publicKey.getEncoded());
-            Key privateKey = keyPair.getPrivate();
-            String privateKeyStr = Base64.encodeBase64URLSafeString(privateKey.getEncoded());
-
-            Map<String, String> keyPairMap = new HashMap<>();
-            keyPairMap.put("publicKey", publicKeyStr);
-            keyPairMap.put("privateKey", privateKeyStr);
-
-            return keyPairMap;
-        }
 
         public static RSAPublicKey getPublicKey(String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
             KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
@@ -491,16 +466,6 @@ public class Utils {
             return Base64.encodeBase64String(fileByte);
         }
 
-        public static void outPutFile(String base64, File file) {
-            byte[] btDataFile = Base64.decodeBase64(base64);
 
-            try {
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(btDataFile);
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

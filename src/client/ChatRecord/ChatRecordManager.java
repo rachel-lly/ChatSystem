@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 
 public class ChatRecordManager {
-    public static void saveChattingRecord(String srcId, String dstId, ArrayList<ChatRecord> record) throws IOException {
-        File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".dat");
+    public static void saveChatRecord(String srcId, String dstId, ArrayList<ChatRecord> record) throws IOException {
+        File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".txt");
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -22,8 +22,8 @@ public class ChatRecordManager {
         outputStream.close();
     }
 
-    public static ArrayList<ChatRecord> readChattingRecord(String srcId, String dstId) throws IOException {
-        File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".dat");
+    public static ArrayList<ChatRecord> readChatRecord(String srcId, String dstId) throws IOException {
+        File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".txt");
         ArrayList<ChatRecord> resArrayList = new ArrayList<>();
 
         if (!file.exists() || file.isDirectory()) {

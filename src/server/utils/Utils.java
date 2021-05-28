@@ -17,6 +17,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 public class Utils {
+
     public static class PackageUtils {
         public static ArrayList<byte[]> SecondaryPack(byte[] src, int blockSize) {
             ArrayList<byte[]> resArrayList = new ArrayList<>();
@@ -505,7 +506,7 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        //String passString = LoginUtils.passwordCompile("123456");
-        //System.out.println(passString);
+        String passString = LoginUtils.passwordCompile("123456");
+        System.out.println(passString);
     }
 }

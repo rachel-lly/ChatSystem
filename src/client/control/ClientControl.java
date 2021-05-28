@@ -1,11 +1,9 @@
-package client;
+package client.control;
 
 import GUI.friend.Friend;
 import GUI.utils.Utils;
 import client.ChatRecord.FileFolder;
-
 import org.apache.commons.codec.binary.Hex;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;

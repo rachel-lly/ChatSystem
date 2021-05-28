@@ -1,10 +1,8 @@
-package GUI;
-
+package GUI.login;
 
 
 import GUI.utils.Utils;
-import client.UserController;
-
+import client.control.UserController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +18,7 @@ public class Login implements KeyListener {
     static String iconURL = "/GUI/assets/chat_icon.png";
 
     public Login(UserController callback) {
-        frame = new JFrame("LiveChat");
+        frame = new JFrame("ChatSystem");
         frame.setBackground(Utils.Theme.ThemeColor1);
 
         Toolkit t = Toolkit.getDefaultToolkit();
@@ -73,8 +71,8 @@ public class Login implements KeyListener {
         IDLabel.setFont(new Font("menlo", Font.BOLD, 15));
         jp.add(IDLabel);
 
-        JLabel passwordLabel = new JLabel("密码:");
-        passwordLabel.setBounds(105, 42, 200, 30);
+        JLabel passwordLabel = new JLabel("password:");
+        passwordLabel.setBounds(68, 42, 210, 30);
         passwordLabel.setFont(new Font("menlo", Font.BOLD, 15));
         jp.add(passwordLabel);
 
@@ -98,7 +96,7 @@ public class Login implements KeyListener {
         passwordField = new JPasswordField(18);
         passwordField.setBounds(11, 42, 200, 30);
         passwordField.setFont(new Font("menlo", Font.BOLD, 17));
-        passwordField.addFocusListener(new JPasswordFieldHandler(passwordField, "密码"));
+        passwordField.addFocusListener(new JPasswordFieldHandler(passwordField, "password"));
         passwordField.setOpaque(false);
         passwordField.addKeyListener(this);
         jp.add(passwordField);

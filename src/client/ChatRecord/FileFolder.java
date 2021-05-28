@@ -6,7 +6,7 @@ import java.io.File;
 public class FileFolder {
 
     public static String getDefaultDirectory() {
-        return "./src/client/chatRecordFile";
+        return "./src/chatRecordFile";
     }
     static {
         init();

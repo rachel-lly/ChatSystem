@@ -1,6 +1,6 @@
 
 
-import server.ServerControl;
+import server.control.ServerControl;
 
 import java.io.IOException;
 

@@ -9,7 +9,7 @@ public class ChatRecord {
     public String id;
     public String nickName;
     public String msg;
-    public byte state;//0--本人发送 1--他人发送
+    public byte state;//1---text 2---Image 3---File
 
     public ChatRecord(String id, String nickName, String msg, byte state) {
         this.id = id;

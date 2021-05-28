@@ -1,15 +1,11 @@
 package GUI.chat;
 
-
-
-import client.UserController;
+import client.control.UserController;
 import client.utils.Utils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
-
 
 public class RightBubble extends JPanel {
 

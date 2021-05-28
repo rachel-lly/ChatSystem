@@ -9,9 +9,14 @@ public class Utils {
         JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void showMsgMsg(String msg, String title, JFrame frame) {
+    public static void showInformationMsg(String msg, String title, JFrame frame) {
         JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    public static void showWarningMsg(String msg, String title, JFrame frame) {
+        JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.WARNING_MESSAGE);
+    }
+
 
     public static void createText(String TEXT, JPanel parent) {
         JLabel JL = new JLabel(TEXT);

@@ -1,11 +1,8 @@
 package GUI.friend;
 
-
-
-import GUI.Login;
+import GUI.login.Login;
 import GUI.utils.Utils;
-import client.UserController;
-
+import client.control.UserController;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -17,6 +14,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FriendGUI {
+
+    public boolean isFirst = true;
+
+    static String iconURL = "/GUI/assets/chat_icon.png";
+
     public JFrame frame;
     public ArrayList<Friend> friendsList;
     public ArrayList<Friend> applyFriendsList;
@@ -24,8 +26,10 @@ public class FriendGUI {
     public UserController callback;
     public JButton addFriendsButton,
             deleteFriendButton, showApplicationButton;
-    public boolean isDeleting = false;
+    public boolean isDelete = false;
     public JTree tree;
+
+
 
     public FriendGUI(UserController callback) {
         this(new ArrayList<>(), new ArrayList<>(), callback);
@@ -59,7 +63,7 @@ public class FriendGUI {
     public void init() {
         this.frame = new JFrame("好友列表");
         this.frame.setSize(400, 450);
-        this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/GUI/assets/chat_icon.png"))).getImage());
+        this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(Login.class.getResource(iconURL))).getImage());
         this.frame.setLocationRelativeTo(null);
         this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,9 +80,9 @@ public class FriendGUI {
         this.tree.setShowsRootHandles(true);
         this.tree.addTreeSelectionListener(e -> {
             try {
-                Friend friend = (Friend) ((DefaultMutableTreeNode) e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
+                Friend friend = (Friend) ((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
 
-                if (isDeleting) {
+                if (isDelete) {
                     ArrayList<Friend> tempArrayList = new ArrayList<>();
                     tempArrayList.add(new Friend(friend.id, friend.nickName));
                     if (JOptionPane.showConfirmDialog(frame,
@@ -104,19 +108,25 @@ public class FriendGUI {
         jp.setLayout(new GridLayout(1, 0));
         jp.setPreferredSize(new Dimension(0, 30));
 
-        addFriendsButton = Utils.createButton("添加");
+        addFriendsButton = Utils.createButton("添加好友");
         addFriendsButton.addActionListener(e -> addFriendInput());
 
         jp.add(addFriendsButton);
 
-        deleteFriendButton = Utils.createButton("删除");
+        deleteFriendButton = Utils.createButton("删除好友");
         deleteFriendButton.addActionListener(new ActionListener() {
 
             public Color switchColor = new Color(0.5f, 0.0f, 0.0f);
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                isDeleting = !isDeleting;
+
+                if(isFirst){
+                    Utils.showWarningMsg("点击想删除的好友\n重复点击“删除”取消删除界面", "提示",frame);
+                    isFirst = false;
+                }
+
+                isDelete = !isDelete;
                 Color tempColor = deleteFriendButton.getForeground();
                 deleteFriendButton.setForeground(switchColor);
                 switchColor = tempColor;
@@ -133,19 +143,24 @@ public class FriendGUI {
 
     public void addFriendInput() {
         JDialog dialog = new JDialog(this.frame, "请输入好友ID:", true);
-        dialog.setBounds(400, 200, 350, 150);
+        dialog.setBounds(400, 300, 300, 100);
         dialog.setLayout(new BorderLayout());
+
+
         JButton confirm = Utils.createButton("确定");
+
         JTextField idFieldArea = new JTextField();
 
         confirm.addActionListener(e -> {
             if ("".equals(idFieldArea.getText())) {
                 return;
             }
+
+
             ArrayList<Friend> tempArrayList = new ArrayList<>();
             tempArrayList.add(new Friend(idFieldArea.getText(), ""));
             callback.addFriends(tempArrayList);
-            Utils.showMsgMsg("好友申请已发送!", "通知", frame);
+            Utils.showInformationMsg("好友申请已发送!", "通知", frame);
             dialog.setVisible(false);
         });
 

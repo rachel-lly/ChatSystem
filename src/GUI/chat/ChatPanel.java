@@ -1,9 +1,6 @@
 package GUI.chat;
 
-
-
 import GUI.friend.Friend;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;

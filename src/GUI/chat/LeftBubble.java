@@ -1,10 +1,8 @@
 package GUI.chat;
 
-
 import GUI.utils.Utils;
-import client.UserController;
+import client.control.UserController;
 import client.ChatRecord.FileFolder;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;

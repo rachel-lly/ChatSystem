@@ -1,5 +1,6 @@
-package server;
+package server.control;
 
+import client.control.ClientControl;
 import org.apache.commons.codec.binary.Hex;
 import server.user.OnlineUser;
 import server.user.User;
@@ -23,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerControl {
 
-    public static int PORT_DEFAULT = 9023;
     public int port;
 
     public static final int BANDWIDTH = 1024 * 8;
@@ -34,7 +34,7 @@ public class ServerControl {
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
     public ServerControl() throws IOException {
-        this(PORT_DEFAULT);
+        this(ClientControl.PORT_DEFAULT);
     }
 
     public ServerControl(int port) throws IOException {
