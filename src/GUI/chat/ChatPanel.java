@@ -9,14 +9,14 @@ import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 
 
-public class ChattingPanel extends JPanel {
+public class ChatPanel extends JPanel {
 
     public ParallelGroup seGroup1;
     public SequentialGroup seGroup2;
     public GroupLayout layout;
     public Friend friend, self;
 
-    public ChattingPanel(Friend friend, Friend self) {
+    public ChatPanel(Friend friend, Friend self) {
         layout = new GroupLayout(this);
         this.setLayout(layout);
         this.friend = friend;

@@ -2,7 +2,7 @@ package client;
 
 import GUI.friend.Friend;
 import GUI.utils.Utils;
-import client.file.FileFolder;
+import client.ChatRecord.FileFolder;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -21,17 +21,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ClientBusinesses {
-    // public static String ADDRESS_DEFAULT = "120.79.206.56";
+public class ClientControl {
+
     public static String ADDRESS_DEFAULT = "127.0.0.1";
-    /**
-     * Default
-     */
-    public static int PORT_DEFAULT = 543;
-    /**
-     * Default bandwidth (Plz. suitable to the server's bandwidth)
-     */
-    public static final int BANDWIDTH_DEFAULT = 1024 * 8;
+
+    public static int PORT_DEFAULT = 9023;
+
+    public static final int BANDWIDTH_DEFAULT = 1024 * 9;
     public int port;
     public String address;
     public String publicKey = null, privateKey = null;
@@ -43,11 +39,11 @@ public class ClientBusinesses {
     public UserController callback;
     public Map<String, ArrayList<byte[]>> packageBuffer;
 
-    public ClientBusinesses(UserController callback) throws IOException {
+    public ClientControl(UserController callback) throws IOException {
         this(callback, ADDRESS_DEFAULT, PORT_DEFAULT);
     }
 
-    public ClientBusinesses(UserController callback, String address, int port) throws IOException {
+    public ClientControl(UserController callback, String address, int port) throws IOException {
         this.packageBuffer = new HashMap<>();
         this.callback = callback;
         this.address = address;

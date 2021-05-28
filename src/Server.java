@@ -1,13 +1,12 @@
 
 
-import server.ServerBusinesses;
+import server.ServerControl;
 
 import java.io.IOException;
 
 
 public class Server {
     public static void main(String[] args) throws IOException {
-        ServerBusinesses server = new ServerBusinesses();
-        server.start();
+      new ServerControl().start();
     }
 }

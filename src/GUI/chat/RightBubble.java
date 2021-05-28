@@ -12,6 +12,9 @@ import java.awt.geom.RoundRectangle2D;
 
 
 public class RightBubble extends JPanel {
+
+    static String fileIconURL = "/GUI/assets/whiteFile.png";
+
     @Override
     protected void paintComponent(final Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
@@ -65,7 +68,7 @@ public class RightBubble extends JPanel {
     public static RightBubble createFile(String name) {
         RightBubble msgPanel = new RightBubble();
         ImageIcon image;
-        image = new ImageIcon(UserController.class.getResource("GUI/assets/whiteFile.png"));
+        image = new ImageIcon(UserController.class.getResource(msgPanel.fileIconURL));
 
         if (image.getIconHeight() > image.getIconWidth()) {
             if (image.getIconHeight() > 100) {

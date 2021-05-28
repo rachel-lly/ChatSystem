@@ -1,9 +1,6 @@
 package server.database;
 
-
-
 import server.user.User;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;

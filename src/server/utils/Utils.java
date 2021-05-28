@@ -3,7 +3,6 @@ package server.utils;
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.binary.Base64;
 import server.user.User;
-
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -506,7 +505,7 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        String passString = LoginUtils.passwordCompile("123456");
-        System.out.println(passString);
+        //String passString = LoginUtils.passwordCompile("123456");
+        //System.out.println(passString);
     }
 }

@@ -17,6 +17,8 @@ public class Login implements KeyListener {
     private final UserController callback;
     private boolean logined = false;
 
+    static String iconURL = "/GUI/assets/chat_icon.png";
+
     public Login(UserController callback) {
         frame = new JFrame("LiveChat");
         frame.setBackground(Utils.Theme.ThemeColor1);
@@ -25,7 +27,7 @@ public class Login implements KeyListener {
         Dimension d = t.getScreenSize();
 
         frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 510, 380);
-        frame.setIconImage(new ImageIcon(Login.class.getResource("/GUI/assets/icon.png")).getImage());
+        frame.setIconImage(new ImageIcon(Login.class.getResource(iconURL)).getImage());
         frame.setResizable(false);
 
         JPanel northPanel = creatNorth();
@@ -51,7 +53,7 @@ public class Login implements KeyListener {
         jp.setLayout(null);
         jp.setPreferredSize(new Dimension(0, 190));
 
-        ImageIcon in = new ImageIcon(Login.class.getResource("/GUI/assets/logo.png"));
+        ImageIcon in = new ImageIcon(Login.class.getResource(iconURL));
         JLabel cc = new JLabel(in);
         cc.setBounds(0, 0, 500, 190);
         cc.setOpaque(false);

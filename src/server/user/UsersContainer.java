@@ -1,9 +1,6 @@
 package server.user;
 
-
-
 import server.database.MySqlLoader;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,29 +1,24 @@
-package client.file.chattingRecord;
+package client.ChatRecord;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-
-public class ChattingRecord {
+public class ChatRecord {
     public String id;
     public String nickName;
     public String msg;
-    /**
-     * 0 for self
-     * 1 for opposite
-     */
-    public byte state;
+    public byte state;//0--本人发送 1--他人发送
 
-    public ChattingRecord(String id, String nickName, String msg, byte state) {
+    public ChatRecord(String id, String nickName, String msg, byte state) {
         this.id = id;
         this.nickName = nickName;
         this.msg = msg;
         this.state = state;
     }
 
-    public ChattingRecord() {
+    public ChatRecord() {
         this("", "", "", (byte) 0);
     }
 
@@ -33,14 +28,14 @@ public class ChattingRecord {
         stream.write(this.msg.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static ChattingRecord toData(DataInputStream stream) throws IOException {
-        ChattingRecord resChattingRecord;
-        resChattingRecord = new ChattingRecord();
-        resChattingRecord.state = stream.readByte();
+    public static ChatRecord toData(DataInputStream stream) throws IOException {
+        ChatRecord resChatRecord;
+        resChatRecord = new ChatRecord();
+        resChatRecord.state = stream.readByte();
         byte[] msg = new byte[stream.readInt()];
         stream.read(msg);
-        resChattingRecord.msg = new String(msg, StandardCharsets.UTF_8);
+        resChatRecord.msg = new String(msg, StandardCharsets.UTF_8);
 
-        return resChattingRecord;
+        return resChatRecord;
     }
 }

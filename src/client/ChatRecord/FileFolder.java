@@ -1,4 +1,4 @@
-package client.file;
+package client.ChatRecord;
 
 import java.io.File;
 
@@ -6,7 +6,7 @@ import java.io.File;
 public class FileFolder {
 
     public static String getDefaultDirectory() {
-        return "./src/client/chattingRecord";
+        return "./src/client/chatRecordFile";
     }
     static {
         init();

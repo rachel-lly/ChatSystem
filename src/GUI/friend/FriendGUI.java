@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 public class FriendGUI {
     public JFrame frame;
@@ -59,7 +59,7 @@ public class FriendGUI {
     public void init() {
         this.frame = new JFrame("好友列表");
         this.frame.setSize(400, 450);
-        this.frame.setIconImage(new ImageIcon(Login.class.getResource("/GUI/assets/icon.png")).getImage());
+        this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/GUI/assets/chat_icon.png"))).getImage());
         this.frame.setLocationRelativeTo(null);
         this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

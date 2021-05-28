@@ -3,7 +3,7 @@ package GUI.chat;
 
 import GUI.utils.Utils;
 import client.UserController;
-import client.file.FileFolder;
+import client.ChatRecord.FileFolder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +15,8 @@ import java.io.File;
 public class LeftBubble extends JPanel {
     private final int strokeThickness;
     private final int padding;
+
+    static String fileIconURL = "/GUI/assets/blackFile.png";
 
     {
         strokeThickness = 3;
@@ -117,7 +119,7 @@ public class LeftBubble extends JPanel {
     public static LeftBubble createFile(String name, String srcId) {
         LeftBubble msgPanel = new LeftBubble();
         ImageIcon image;
-        image = new ImageIcon(UserController.class.getResource("GUI/assets/blackFile.png"));
+        image = new ImageIcon(UserController.class.getResource(msgPanel.fileIconURL));
 
         JButton text = Utils.createButton(name);
         text.setBorderPainted(false);

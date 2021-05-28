@@ -1,12 +1,10 @@
 package server;
 
-
 import org.apache.commons.codec.binary.Hex;
 import server.user.OnlineUser;
 import server.user.User;
 import server.user.UsersContainer;
 import server.utils.Utils;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -23,15 +21,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
-public class ServerBusinesses {
-    /**
-     * Default
-     */
-    public static int PORT_DEFAULT = 543;
+public class ServerControl {
+
+    public static int PORT_DEFAULT = 9023;
     public int port;
-    /**
-     * Bandwidth
-     */
+
     public static final int BANDWIDTH = 1024 * 8;
     public HashMap<String, OnlineUser> onlineUserList = new HashMap<>();
     public ExecutorService executor = null;
@@ -39,11 +33,11 @@ public class ServerBusinesses {
     public AsynchronousServerSocketChannel serverChannel = null;
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
-    public ServerBusinesses() throws IOException {
+    public ServerControl() throws IOException {
         this(PORT_DEFAULT);
     }
 
-    public ServerBusinesses(int port) throws IOException {
+    public ServerControl(int port) throws IOException {
         this.port = port;
         this.init();
     }

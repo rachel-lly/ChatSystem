@@ -1,25 +1,23 @@
 package client;
 
 
-
 import GUI.Login;
-import GUI.chat.ChattingGUI;
+import GUI.chat.ChattGUI;
 import GUI.friend.Friend;
 import GUI.friend.FriendGUI;
 import GUI.utils.Utils;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 public class UserController {
-    public ClientBusinesses client;
+    public ClientControl client;
     public Login loggingLogin;
     public FriendGUI friendGUI;
     public ArrayList<Friend> friendList;
     public ArrayList<Friend> applyFriendList;
-    public HashMap<String, ChattingGUI> chattingPanel;
+    public HashMap<String, ChattGUI> chattingPanel;
     public String id;
 
     public boolean login(String id, String password) throws Exception {
@@ -41,7 +39,7 @@ public class UserController {
     public void openChattingPanel(Friend friend) {
         if (chattingPanel.get(friend.id) != null) {
         } else {
-            chattingPanel.put(friend.id, new ChattingGUI(this, friend));
+            chattingPanel.put(friend.id, new ChattGUI(this, friend));
         }
     }
 
@@ -83,7 +81,7 @@ public class UserController {
                     break;
                 }
             }
-            chattingPanel.put(id, new ChattingGUI(this, sender));
+            chattingPanel.put(id, new ChattGUI(this, sender));
         }
         chattingPanel.get(id).receiveMsg(msg, type);
     }
@@ -130,7 +128,7 @@ public class UserController {
     public void init() throws IOException {
         this.friendList = new ArrayList<>();
         this.applyFriendList = new ArrayList<>();
-        this.client = new ClientBusinesses(this);
+        this.client = new ClientControl(this);
         this.friendGUI = new FriendGUI(this.friendList, this.applyFriendList, this);
         this.chattingPanel = new HashMap<>();
     }

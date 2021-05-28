@@ -1,14 +1,12 @@
-package client.file.chattingRecord;
+package client.ChatRecord;
 
-
-import client.file.FileFolder;
 
 import java.io.*;
 import java.util.ArrayList;
 
 
-public class ChattingRecordManager {
-    public static void saveChattingRecord(String srcId, String dstId, ArrayList<ChattingRecord> record) throws IOException {
+public class ChatRecordManager {
+    public static void saveChattingRecord(String srcId, String dstId, ArrayList<ChatRecord> record) throws IOException {
         File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".dat");
 
         if (!file.exists()) {
@@ -18,15 +16,15 @@ public class ChattingRecordManager {
         DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(file));
         outputStream.writeInt(record.size());
 
-        for (ChattingRecord chattingRecord : record) {
-            chattingRecord.toFile(outputStream);
+        for (ChatRecord chatRecord : record) {
+            chatRecord.toFile(outputStream);
         }
         outputStream.close();
     }
 
-    public static ArrayList<ChattingRecord> readChattingRecord(String srcId, String dstId) throws IOException {
+    public static ArrayList<ChatRecord> readChattingRecord(String srcId, String dstId) throws IOException {
         File file = new File(FileFolder.getDefaultDirectory() + "/" + srcId + "/" + dstId + ".dat");
-        ArrayList<ChattingRecord> resArrayList = new ArrayList<>();
+        ArrayList<ChatRecord> resArrayList = new ArrayList<>();
 
         if (!file.exists() || file.isDirectory()) {
             return resArrayList;
@@ -37,7 +35,7 @@ public class ChattingRecordManager {
             int size = inputStream.readInt();
             System.out.println(size);
             for (int i = 0; i < size; ++i) {
-                resArrayList.add(ChattingRecord.toData(inputStream));
+                resArrayList.add(ChatRecord.toData(inputStream));
             }
             inputStream.close();
         } catch (IOException e) {
