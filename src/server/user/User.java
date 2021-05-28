@@ -14,6 +14,6 @@ public class User {
 
     @Override
     public String toString() {
-        return this.nickName + " ( ID: " + this.id +" )";
+        return this.nickName + "@" + this.id;
     }
 }

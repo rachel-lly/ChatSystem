@@ -122,7 +122,7 @@ public class FriendGUI {
             public void actionPerformed(ActionEvent e) {
 
                 if(isFirst){
-                    Utils.showWarningMsg("点击想删除的好友\n重复点击“删除”取消删除界面", "提示",frame);
+                    Utils.showWarningMsg("点击想删除的好友\n重复点击“删除”取消删除界面", "提示",null);
                     isFirst = false;
                 }
 

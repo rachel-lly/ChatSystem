@@ -16,30 +16,30 @@ public class Friend {
         this.state = state;
     }
 
-    @Override
-    public String toString() {
-        if (this.state == -1) {
-            return this.nickName + "@" + this.id;
-        } else if (this.state == 1) {
-            return this.nickName + "@" + this.id + " (状态: 在线)";
-        } else if (this.state == 0) {
-            return this.nickName + "@" + this.id + " (状态: 离线)";
-        }
-
-        return this.nickName + "@" + this.id + " (" + this.state + ")";
-    }
-
-
 
 //    public String toString() {
 //        if (this.state == -1) {
-//            return this.nickName + " ( ID: " + this.id+" )";
+//            return this.nickName + "@" + this.id;
 //        } else if (this.state == 1) {
-//            return this.nickName + " ( ID: " + this.id+" )"+ " [ 在线 ]";
+//            return this.nickName + "@" + this.id + " (状态: 在线)";
 //        } else if (this.state == 0) {
-//            return this.nickName +" ( ID: " + this.id+" )" + " [ 离线 ]";
+//            return this.nickName + "@" + this.id + " (状态: 离线)";
 //        }
 //
-//        return this.nickName +" ( ID: " + this.id+" )" + " (" + this.state + ")";
+//        return this.nickName + "@" + this.id + " (" + this.state + ")";
 //    }
+
+
+    @Override
+    public String toString() {
+        if (this.state == -1) {
+            return this.nickName + " ( ID: " + this.id+" ) ";
+        } else if (this.state == 1) {
+            return this.nickName + " ( ID: " + this.id+" ) "+ " [在线]";
+        } else if (this.state == 0) {
+            return this.nickName +" ( ID: " + this.id+" ) " + " [离线]";
+        }
+
+        return this.nickName +" ( ID: " + this.id+" ) " + " (" + this.state + ")";
+    }
 }
