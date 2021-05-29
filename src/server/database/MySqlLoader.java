@@ -96,17 +96,8 @@ public class MySqlLoader {
         try {
             ResultSet rs = this.statement.executeQuery("SELECT * FROM userinfo;");
 
-
-            ArrayList<String> list = new ArrayList<>();
-            list.add("500");
-            list.add("501");
-            list.add("50072");
-
             while (rs.next()) {
-                if(!list.contains(rs.getString("id"))){
-                    dst.put(rs.getString("id"), new User(rs.getString("id"), rs.getString("password"), rs.getString("nickName")));
-                }
-
+                dst.put(rs.getString("id"), new User(rs.getString("id"), rs.getString("password"), rs.getString("nickName")));
             }
             rs.close();
         } catch (SQLException se) {
@@ -166,19 +157,12 @@ public class MySqlLoader {
     public ArrayList<String> searchFriend(String srcId) {
         ArrayList<String> res = new ArrayList<>();
 
-        ArrayList<String> list = new ArrayList<>();
-        list.add("500");
-        list.add("501");
-        list.add("50072");
 
         try {
             ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_FRIEND_STRING, srcId));
             while (rs.next()) {
 
-                if(!list.contains(rs.getString("dstid"))) {
-                    res.add(rs.getString("dstid"));
-                }
-
+                res.add(rs.getString("dstid"));
             }
             rs.close();
         } catch (SQLException se) {
