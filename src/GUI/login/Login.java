@@ -15,6 +15,8 @@ public class Login implements KeyListener {
     private final UserController callback;
     private boolean logined = false;
 
+    public static String id;
+
     static String iconURL = "/GUI/assets/chat_icon.png";
 
     public Login(UserController callback) {
@@ -146,6 +148,7 @@ public class Login implements KeyListener {
                 try {
                     if (uiFrame.callback.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
                         uiFrame.logined = true;
+                        id = idField.getText();
                         uiFrame.dispose();
                     }
                 } catch (Exception e1) {

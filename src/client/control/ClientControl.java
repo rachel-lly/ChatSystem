@@ -1,12 +1,20 @@
 package client.control;
 
+import GUI.chat.LeftBubble;
+import GUI.chat.RightBubble;
 import GUI.friend.Friend;
+import GUI.login.Login;
 import GUI.utils.Utils;
 import client.ChatRecord.FileFolder;
+import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
+import server.control.ServerControl;
 import server.database.MySqlLoader;
+import server.user.OnlineUser;
+import server.user.User;
 import server.user.UsersContainer;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -29,6 +37,7 @@ public class ClientControl {
     public static int PORT_DEFAULT = 9023;
 
     public static final int BANDWIDTH_DEFAULT = 1024 * 9;
+    public static final int BANDWIDTH = 1024 * 8;
     public int port;
     public String address;
     public String publicKey = null, privateKey = null;
@@ -39,6 +48,50 @@ public class ClientControl {
     public AsynchronousSocketChannel clientChannel = null;
     public UserController callback;
     public Map<String, ArrayList<byte[]>> packageBuffer;
+
+    public ArrayList<Friend> friendList = new ArrayList<>();
+
+   public void sendGroupMsg(String groupName, String msg, int type) throws MsgException {
+        if (!this.clientChannel.isOpen()) {
+            throw new MsgException(1, "未连接到服务器");
+        }
+
+
+        ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+
+        for(int i=0;i<groupChats.size();i++){
+           if(groupChats.get(i).groupName.equals(groupName)){
+               String id = groupChats.get(i).groupId;
+               byte[] msgData = client.utils.Utils.PackageUtils.messageGroupPack(id, (byte) type, msg, privateKey);
+               try {
+                   secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
+               } catch (InterruptedException | ExecutionException e) {
+                   e.printStackTrace();
+               }
+           }
+
+        }
+
+
+    }
+
+
+    public void sendMsg(String id, String msg, int type) throws MsgException {
+        if (!this.clientChannel.isOpen()) {
+            throw new MsgException(1, "未连接到服务器");
+        }
+
+
+        byte[] msgData = client.utils.Utils.PackageUtils.messagePack(id, (byte) type, msg, privateKey);
+
+        try {
+            secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public ClientControl(UserController callback) throws IOException {
         this(callback, ADDRESS_DEFAULT, PORT_DEFAULT);
@@ -80,7 +133,7 @@ public class ClientControl {
 
     }
 
-    public ArrayList<String> addGroupChat() throws MsgException {
+    public ArrayList<GroupChat> addGroupChat() throws MsgException {
         if (!this.clientChannel.isOpen()) {
             throw new MsgException(1, "未连接到服务器");
         }
@@ -107,19 +160,6 @@ public class ClientControl {
             throw new MsgException(1, "未连接到服务器");
         }
         byte[] msgData = client.utils.Utils.PackageUtils.filePack(id, name, file, privateKey);
-
-        try {
-            secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendMsg(String id, String msg, int type) throws MsgException {
-        if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
-        }
-        byte[] msgData = client.utils.Utils.PackageUtils.messagePack(id, (byte) type, msg, privateKey);
 
         try {
             secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
@@ -190,11 +230,15 @@ public class ClientControl {
                 callback.errorOccupy(resMap.get("message"));
             } else if (msgData.get(0) == 5) {
                 ArrayList<Friend> resArray =client.utils.Utils.PackageUtils.friendListUnPack(msgData, publicKey);
+                
                 if (msgData.get(1) == 1) {
+                    friendList = resArray;
                     callback.updateFriendList(resArray);
+                    
                 } else if (msgData.get(1) == 2) {
                     callback.updateApplyFriendList(resArray);
                 }
+                
             } else if (msgData.get(0) == 6) {
                 Map<String, Object> resMap;
                 resMap = client.utils.Utils.PackageUtils.fileUnPack(msgData, publicKey);
@@ -217,7 +261,6 @@ public class ClientControl {
         assert dataSeriesArrayList != null;
         for (byte[] datas : dataSeriesArrayList) {
             sc.write(ByteBuffer.wrap(datas)).get();
-            System.out.println(Hex.encodeHexString(datas));
         }
     }
 

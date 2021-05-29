@@ -33,6 +33,9 @@ public class ChatGUI {
     public Friend friend;
     public ArrayList<ChatRecord> chatRecords;
 
+    boolean isGroup = false;
+    String groupName = "";
+
     static String chatIconURL = "/GUI/assets/chat_icon.png";
 
     public void update() {
@@ -57,6 +60,7 @@ public class ChatGUI {
     public ChatGUI(UserController callback, Friend friend) {
         this.friend = friend;
         this.callback = callback;
+        this.isGroup = false;
 
         try {
             this.chatRecords = ChatRecordManager.readChatRecord(callback.id, friend.id);
@@ -80,6 +84,32 @@ public class ChatGUI {
         this.callback = callback;
         this.frame.addWindowListener(new CloseWindow());
         this.loadChattingRecord();
+        this.update();
+    }
+
+    public ChatGUI(UserController callback, String name) {
+
+        this.callback = callback;
+        this.isGroup = true;
+        this.groupName = name;
+
+        frame = new JFrame();
+        frame.setBackground(GUI.utils.Utils.Theme.ThemeColor1);
+
+        Toolkit t = Toolkit.getDefaultToolkit();
+        Dimension d = t.getScreenSize();
+
+        frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 700, 700);
+        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatGUI.class.getResource(chatIconURL))).getImage());
+        frame.setResizable(true);
+        frame.setLayout(new BorderLayout());
+        frame.add(creatSouth(), BorderLayout.SOUTH);
+        frame.add(creatCenter(), BorderLayout.CENTER);
+        frame.setVisible(true);
+
+        this.callback = callback;
+        this.frame.addWindowListener(new CloseWindow());
+
         this.update();
     }
 
@@ -243,23 +273,38 @@ public class ChatGUI {
     }
 
     public void sendMsg(String msg, int type) {
+
+
         try {
+
             if (type != 3) {
-                callback.sendMsg(this.friend.id, msg, type);
+
+                if(isGroup){
+
+                    callback.sendGroupMsg(groupName,msg,type);
+
+                }else{
+                    callback.sendMsg(this.friend.id, msg, type);
+
+                    if (type == 1) {
+                        chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 0));
+                    } else {
+                        if (type == 2) {
+                            chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 2));
+                        } else if (type == 3) {
+                            chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 4));
+                        }
+                    }
+                }
+
             }
             this.chatPanel.addSent(msg, type);
-            if (type == 1) {
-                chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 0));
-            } else {
-                if (type == 2) {
-                    chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 2));
-                } else if (type == 3) {
-                    chatRecords.add(new ChatRecord(callback.id, "", msg, (byte) 4));
-                }
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         jScrollPane.getViewport().setViewPosition(new Point(0, jScrollPane.getVerticalScrollBar().getMaximum()));
     }
 
@@ -281,12 +326,18 @@ public class ChatGUI {
     class CloseWindow extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {
-            try {
-                ChatRecordManager.saveChatRecord(callback.id, friend.id, chatRecords);
-            } catch (IOException e1) {
-                e1.printStackTrace();
+
+            if(!isGroup){
+                try {
+
+                    ChatRecordManager.saveChatRecord(callback.id, friend.id, chatRecords);
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                callback.closeChattingPanel(friend);
             }
-            callback.closeChattingPanel(friend);
+
             dispose();
         }
     }

@@ -1,5 +1,6 @@
 package server.user;
 
+import model.GroupChat;
 import server.database.MySqlLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class UsersContainer {
         this.mysqlLoader.loadUsers(this.users);
     }
 
-    public ArrayList<String> getGroupNameList(){
+    public ArrayList<GroupChat> getGroupNameList(){
         return this.mysqlLoader.getGroupName();
     }
 

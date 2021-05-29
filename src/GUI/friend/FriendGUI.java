@@ -3,6 +3,7 @@ package GUI.friend;
 import GUI.login.Login;
 import GUI.utils.Utils;
 import client.control.UserController;
+import model.GroupChat;
 import server.user.UsersContainer;
 
 import javax.swing.*;
@@ -25,13 +26,14 @@ public class FriendGUI {
 
     public ArrayList<Friend> friendsList;
     public ArrayList<Friend> applyFriendsList;
-    public ArrayList<String> groupNameList;
+    public ArrayList<String> groupNameList = new ArrayList<>();
 
     public DefaultMutableTreeNode treeNode;
 
     public DefaultMutableTreeNode rootNode, onLine, offLine;
 
     public DefaultMutableTreeNode groupChat;
+    boolean isGroup = false;
 
     public UserController callback;
     public JButton addFriendsButton,
@@ -51,9 +53,14 @@ public class FriendGUI {
     public FriendGUI(ArrayList<Friend> friendsList,
                      ArrayList<Friend> applyFriendsList,
                      UserController callback) {
+
+        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+        for(int i=0;i<list.size();i++){
+            this.groupNameList.add(list.get(i).groupName);
+        }
+
         this.friendsList = friendsList;
         this.applyFriendsList = applyFriendsList;
-        this.groupNameList = UsersContainer.INSTANCE.getGroupNameList();
         this.callback = callback;
         init();
         updateInformation();
@@ -74,7 +81,13 @@ public class FriendGUI {
             }
         }
 
-        groupNameList = UsersContainer.INSTANCE.getGroupNameList();
+        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+        ArrayList<String> slist = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            slist.add(list.get(i).groupName);
+        }
+
+        groupNameList = slist;
         for(String groupName : groupNameList){
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(groupName);
             this.groupChat.add(node);
@@ -113,26 +126,48 @@ public class FriendGUI {
 
         this.tree.addTreeSelectionListener(e -> {
             try {
-                Friend friend = (Friend) ((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
-
-                if (isDelete) {
-                    ArrayList<Friend> tempArrayList = new ArrayList<>();
-                    tempArrayList.add(new Friend(friend.id, friend.nickName));
-                    if (JOptionPane.showConfirmDialog(frame,
-                            "确定删除该好友吗?\n警告: 该删除操作不可恢复!",
-                            "警告",
-                            JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-                        callback.deleteFriends(tempArrayList);
-
-                        Utils.showInformationMsg("删除好友成功","提示",null);
-                    }
-                } else {
-                    callback.openChattingPanel(friend);
+                ArrayList<GroupChat> grouplist = UsersContainer.INSTANCE.getGroupNameList();
+                ArrayList<String> groupNameList = new ArrayList<>();
+                for(int i=0;i<grouplist.size();i++){
+                    groupNameList.add(grouplist.get(i).groupName);
                 }
+                Object node =((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
+
+                if(groupNameList.contains(node.toString())){
+
+                    callback.openGroupChatPanel(node.toString());
+
+                }else{
+
+                    Friend friend = (Friend)node;
+
+                    if (isDelete) {
+                        ArrayList<Friend> tempArrayList = new ArrayList<>();
+                        tempArrayList.add(new Friend(friend.id, friend.nickName));
+                        if (JOptionPane.showConfirmDialog(frame,
+                                "确定删除该好友吗?\n警告: 该删除操作不可恢复!",
+                                "警告",
+                                JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+                            callback.deleteFriends(tempArrayList);
+
+                            Utils.showInformationMsg("删除好友成功","提示",null);
+                        }
+                    } else {
+                        callback.openChattingPanel(friend);
+                    }
+
+                }
+
+
             } catch (Exception e1) {
 
             }
         });
+
+
+
+
+
         panel.add(new JScrollPane(tree), BorderLayout.CENTER);
 
         this.frame.setContentPane(panel);

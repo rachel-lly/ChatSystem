@@ -1,9 +1,13 @@
 package server.database;
 
+import model.GroupChat;
 import server.user.User;
+
+import java.rmi.activation.ActivationGroupID;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 public class MySqlLoader {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -22,6 +26,7 @@ public class MySqlLoader {
 
     public static final String GROUP_CHAT_TABLE =
             "CREATE TABLE IF NOT EXISTS `groupChatNameList`(" +
+                    "`id` VARCHAR(20) NOT NULL, " +
                     "`groupChatName` VARCHAR(20) NOT NULL, " +
                     "PRIMARY KEY ( `groupChatName` )" +
                     ");";
@@ -34,7 +39,7 @@ public class MySqlLoader {
                     ");";
 
     public static final String GET_GROUP_NAME = "SELECT * FROM groupChatNameList;";
-    public static final String SET_GROUP_NAME = "insert into groupChatNameList values(\"%s\");";
+    public static final String SET_GROUP_NAME = "insert into groupChatNameList values(\"%s\",\"%s\");";
 
     public static final String STANDARD_INSERT_FRIEND_STRING = "insert into friendList values(\"%s\",\"%s\");";
     public static final String STANDARD_SEARCH_FRIEND_STRING = "SELECT distinct f1.dstId FROM friendlist as f1 INNER JOIN friendlist as f2 ON f1.srcId = f2.dstId AND f2.srcId = f1.dstId WHERE f1.srcId = \"%s\";";
@@ -90,8 +95,18 @@ public class MySqlLoader {
     public void loadUsers(Map<String, User> dst) {
         try {
             ResultSet rs = this.statement.executeQuery("SELECT * FROM userinfo;");
+
+
+            ArrayList<String> list = new ArrayList<>();
+            list.add("500");
+            list.add("501");
+            list.add("50072");
+
             while (rs.next()) {
-                dst.put(rs.getString("id"), new User(rs.getString("id"), rs.getString("password"), rs.getString("nickName")));
+                if(!list.contains(rs.getString("id"))){
+                    dst.put(rs.getString("id"), new User(rs.getString("id"), rs.getString("password"), rs.getString("nickName")));
+                }
+
             }
             rs.close();
         } catch (SQLException se) {
@@ -99,14 +114,15 @@ public class MySqlLoader {
         }
     }
 
-    public ArrayList<String> getGroupName(){
-        ArrayList<String> res = new ArrayList<>();
+    public ArrayList<GroupChat> getGroupName(){
+        ArrayList<GroupChat> res = new ArrayList<>();
 
         try {
             ResultSet rs = this.statement.executeQuery(GET_GROUP_NAME);
 
             while (rs.next()){
-                res.add(rs.getString("groupChatName"));
+
+                res.add(new GroupChat(rs.getString("id"),rs.getString("groupChatName"),1));
             }
             rs.close();
 
@@ -118,8 +134,9 @@ public class MySqlLoader {
 
     public void setGroupName(String groupName){
 
+
         try {
-            this.statement.execute(String.format(SET_GROUP_NAME,groupName));
+            this.statement.execute(String.format(SET_GROUP_NAME,"500"+String.valueOf(1000*Math.random()),groupName));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -148,10 +165,20 @@ public class MySqlLoader {
 
     public ArrayList<String> searchFriend(String srcId) {
         ArrayList<String> res = new ArrayList<>();
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("500");
+        list.add("501");
+        list.add("50072");
+
         try {
             ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_FRIEND_STRING, srcId));
             while (rs.next()) {
-                res.add(rs.getString("dstid"));
+
+                if(!list.contains(rs.getString("dstid"))) {
+                    res.add(rs.getString("dstid"));
+                }
+
             }
             rs.close();
         } catch (SQLException se) {

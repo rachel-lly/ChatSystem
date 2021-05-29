@@ -3,6 +3,7 @@ package client.utils;
 import GUI.friend.Friend;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+
 import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.security.KeyPairGenerator.getInstance;
 
@@ -167,8 +169,6 @@ public class Utils {
             return data;
         }
 
-
-
         public static ArrayList<Friend> friendListUnPack(ByteBuffer msg, String publicKey) {
             ArrayList<Friend> resArray = new ArrayList<>();
             byte[] data = msg.array(),
@@ -225,6 +225,37 @@ public class Utils {
 
             return data;
         }
+
+        public static byte[] messageGroupPack(String id, byte msgType, String msg, String privateKey) {
+            byte[] id_RSA, msg_RSA;
+            try {
+                id_RSA = RSAUtils.privateEncrypt(id.getBytes(UTF_8), RSAUtils.getPrivateKey(privateKey));
+                msg_RSA = RSAUtils.privateEncrypt(msg.getBytes(UTF_8), RSAUtils.getPrivateKey(privateKey));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                e.printStackTrace();
+                return null;
+            }
+            byte[] data = new byte[2 + 4 + 4 + id_RSA.length + msg_RSA.length];
+            data[0] = 3;
+            data[1] = msgType;
+            byte[] size1 = Convertion.int2Bytes(id_RSA.length),
+                    size2 = Convertion.int2Bytes(msg_RSA.length);
+
+            for (int i = 0; i < 4; ++i) {
+                data[2 + i] = size1[i];
+                data[6 + i] = size2[i];
+            }
+            for (int i = 0; i < id_RSA.length; ++i) {
+                data[2 + 4 + 4 + i] = id_RSA[i];
+            }
+            for (int i = 0; i < msg_RSA.length; ++i) {
+                data[2 + 4 + 4 + id_RSA.length + i] = msg_RSA[i];
+            }
+
+            return data;
+        }
+
+
 
         public static Map<String, String> messageUnPack(ByteBuffer msg, String publicKey) {
             Map<String, String> resMap = new HashMap<>();
@@ -361,7 +392,6 @@ public class Utils {
     public static class RSAUtils {
         public static final String RSA_ALGORITHM = "RSA";
 
-
         public static Map<String, String> createKeys(int keySize) {
             KeyPairGenerator kpg;
             try {
@@ -383,7 +413,6 @@ public class Utils {
 
             return keyPairMap;
         }
-
 
         public static RSAPublicKey getPublicKey(String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
             KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);

@@ -5,6 +5,9 @@ import GUI.chat.ChatGUI;
 import GUI.friend.Friend;
 import GUI.friend.FriendGUI;
 import GUI.utils.Utils;
+import model.GroupChat;
+import server.user.UsersContainer;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +52,13 @@ public class UserController {
         }
     }
 
+    public void openGroupChatPanel(String groupName) {
+
+        chattingPanel.put(groupName, new ChatGUI(this, groupName));
+
+    }
+
+
     public void updateFriendList(ArrayList<Friend> friendList) {
         this.friendGUI.friendsList = friendList;
 
@@ -61,14 +71,7 @@ public class UserController {
         this.friendGUI.updateInformation();
     }
 
-//    public void updateGroupNameList(ArrayList<String> groupNameList) {
-//        this.friendGUI.groupNameList = groupNameList;
-//
-//        for (String name: groupNameList) {
-//
-//        }
-//        this.friendGUI.updateInformation();
-//    }
+
 
     public void updateApplyFriendList(ArrayList<Friend> applyFriendsList) {
         this.friendGUI.applyFriendsList = applyFriendsList;
@@ -88,24 +91,35 @@ public class UserController {
 
     public void receivedMsg(String id, String msg, int type) {
         if (chattingPanel.get(id) == null) {
-            Friend sender = new Friend(id, "匿名");
-            for (Friend fri : this.friendGUI.friendsList) {
-                if (fri.id.equals(id)) {
-                    sender.nickName = fri.nickName;
-                    sender.state = 1;
-                    break;
-                }
-            }
-            chattingPanel.put(id, new ChatGUI(this, sender));
+
+           ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+
+
+           for(int i=0;i<groupChats.size();i++){
+
+               if(id.equals(groupChats.get(i).groupId)){
+                   Friend sender = new Friend(id,groupChats.get(i).groupName);
+                   sender.state = 1;
+                   chattingPanel.put(id, new ChatGUI(this, sender));
+                   break;
+               }
+           }
+
         }
         chattingPanel.get(id).receiveMsg(msg, type);
     }
 
     public boolean sendMsg(String id, String msg, int type) throws Exception {
         client.sendMsg(id, msg, type);
-
         return true;
     }
+
+    public boolean sendGroupMsg(String groupName, String msg, int type) throws Exception {
+        client.sendGroupMsg(groupName, msg, type);
+        return true;
+    }
+
+
 
     public boolean addFriends(ArrayList<Friend> friends) {
         try {

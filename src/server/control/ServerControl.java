@@ -1,6 +1,7 @@
 package server.control;
 
 import client.control.ClientControl;
+import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import server.user.OnlineUser;
 import server.user.User;
@@ -33,6 +34,10 @@ public class ServerControl {
     public AsynchronousServerSocketChannel serverChannel = null;
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
+    public HashMap<String, OnlineUser> getOnlineUserList() {
+        return onlineUserList;
+    }
+
     public ServerControl() throws IOException {
         this(ClientControl.PORT_DEFAULT);
     }
@@ -61,76 +66,7 @@ public class ServerControl {
         }
     }
 
-    public void secondaryPackAndSent(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
-        ArrayList<byte[]> dataSeriesArrayList;
-        dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
-
-        assert dataSeriesArrayList != null;
-        for (byte[] datas : dataSeriesArrayList) {
-            sc.write(ByteBuffer.wrap(datas)).get();
-        }
-    }
-
-    public void secondaryPackAndSentWithLimit(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
-        ArrayList<byte[]> dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
-
-        assert dataSeriesArrayList != null;
-        for (byte[] datas : dataSeriesArrayList) {
-            sc.write(ByteBuffer.wrap(datas)).get();
-        }
-    }
-
-    public boolean sendMsg(String srcId, String dstId, String msg, int type) {
-        boolean res;
-        res = false;
-
-        if (dstId != null) {
-            OnlineUser user = this.onlineUserList.get(dstId);
-            if (user == null) {
-                res = true;
-            } else {
-                try {
-                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            for (String id : this.onlineUserList.keySet()) {
-                OnlineUser user = this.onlineUserList.get(id);
-                try {
-                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return res;
-    }
-
-    public void updateFriendList(OnlineUser user) {
-        try {
-            ArrayList<User> friendList = UsersContainer.INSTANCE.searchFriendAsUser(user.user.id);
-            boolean[] onLine = new boolean[friendList.size()];
-
-            for (int i = 0; i < onLine.length; ++i) {
-                onLine[i] = onlineUserList.get(friendList.get(i).id) != null;
-            }
-            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 1,
-                    friendList, onLine,
-                    user.privateKey), BANDWIDTH);
-            friendList = UsersContainer.INSTANCE.searchApplyFriendAsUser(user.user.id);
-            onLine = new boolean[friendList.size()];
-            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 2,
-                    friendList, onLine,
-                    user.privateKey), BANDWIDTH);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    class LoopingMessageHandler implements CompletionHandler<Integer, Object> {
+    public class LoopingMessageHandler implements CompletionHandler<Integer, Object> {
         public AsynchronousSocketChannel sc;
         public OnlineUser user;
         public ByteBuffer msgData = ByteBuffer.allocate(BANDWIDTH);
@@ -141,31 +77,59 @@ public class ServerControl {
         }
 
         public void process(String md5) {
+
             if (bufferDataMap.get(user.user.id).get(md5) == null) {
                 return;
             }
             ByteBuffer msgData = ByteBuffer.wrap(Utils.PackageUtils.secondaryUnPack(bufferDataMap.get(user.user.id).get(md5), BANDWIDTH));
             bufferDataMap.get(user.user.id).remove(md5);
 
+            boolean isGroup = false;
+
             try {
+
+
                 if (msgData.get(0) == 3) {
                     Map<String, String> resMap = Utils.PackageUtils.messageUnPack(msgData, user.publicKey);
                     boolean isSend = false;
-                    
-                    for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
-                        if (id.equals(resMap.get("id"))) {
-                            sendMsg(user.user.id, resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
-                            isSend = true;
+
+
+                    ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+
+                    ArrayList<String> groupidList = new ArrayList<>();
+
+                    for(int i=0;i<groupChats.size();i++){
+                        groupidList.add(groupChats.get(i).groupId);
+                    }
+                    for(String id:groupidList){
+                        if(id.equals(resMap.get("id"))){
+                            isGroup = true;
+                            for(String onlineId:onlineUserList.keySet()){
+                                if(!onlineId.equals(user.user.id)){
+                                    sendMsg(resMap.get("id"), onlineId, resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
+                                }
+                            }
+
                         }
                     }
 
-                    if (!isSend) {
-                        try {
-                            secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "您与" + resMap.get("id") + "并非好友！"), BANDWIDTH);
-                        } catch (InterruptedException | ExecutionException e1) {
-                            e1.printStackTrace();
+                    if(!isGroup){
+                        for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
+                            if (id.equals(resMap.get("id"))) {
+                                sendMsg(user.user.id, resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
+                                isSend = true;
+                            }
+                        }
+
+                        if (!isSend) {
+                            try {
+                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "您与" + resMap.get("id") + "并非好友！"), BANDWIDTH);
+                            } catch (InterruptedException | ExecutionException e1) {
+                                e1.printStackTrace();
+                            }
                         }
                     }
+
                 } else if (msgData.get(0) == 5) {
                     ArrayList<String> FriendStrings = Utils.PackageUtils.friendListUnPack(msgData, user.publicKey);
                     if (msgData.get(1) == 1) {
@@ -269,6 +233,81 @@ public class ServerControl {
             System.out.println("用户" + this.user.user.toString() + "下线" + "!当前在线用户数量：" + onlineUserList.size());
         }
     }
+
+
+    public static void secondaryPackAndSent(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
+        ArrayList<byte[]> dataSeriesArrayList;
+        dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
+
+        assert dataSeriesArrayList != null;
+        for (byte[] datas : dataSeriesArrayList) {
+            sc.write(ByteBuffer.wrap(datas)).get();
+        }
+    }
+
+    public void secondaryPackAndSentWithLimit(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
+        ArrayList<byte[]> dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
+
+        assert dataSeriesArrayList != null;
+        for (byte[] datas : dataSeriesArrayList) {
+            sc.write(ByteBuffer.wrap(datas)).get();
+        }
+    }
+
+
+    public boolean sendMsg(String srcId, String dstId, String msg, int type) {
+        boolean res;
+        res = false;
+
+        if (dstId != null) {
+            OnlineUser user = this.onlineUserList.get(dstId);
+            if (user == null) {
+                res = true;
+            } else {
+                try {
+                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            for (String id : this.onlineUserList.keySet()) {
+                OnlineUser user = this.onlineUserList.get(id);
+                try {
+                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return res;
+    }
+
+    public void updateFriendList(OnlineUser user) {
+        try {
+            ArrayList<User> friendList = UsersContainer.INSTANCE.searchFriendAsUser(user.user.id);
+            boolean[] onLine = new boolean[friendList.size()];
+
+
+            for (int i = 0; i < onLine.length; ++i) {
+                onLine[i] = onlineUserList.get(friendList.get(i).id) != null;
+
+            }
+            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 1,
+                    friendList, onLine,
+                    user.privateKey), BANDWIDTH);
+            friendList = UsersContainer.INSTANCE.searchApplyFriendAsUser(user.user.id);
+            onLine = new boolean[friendList.size()];
+            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 2,
+                    friendList, onLine,
+                    user.privateKey), BANDWIDTH);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void userLogOut(OnlineUser user) {
         for (String friendId : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
