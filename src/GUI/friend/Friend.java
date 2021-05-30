@@ -4,7 +4,7 @@ package GUI.friend;
 public class Friend {
     public String id;
     public String nickName;
-    public int state;//0--在线 1--离线
+    public int state;//0--离线 1--在线
 
     public Friend(String id, String nickName) {
         this(id, nickName, -1);

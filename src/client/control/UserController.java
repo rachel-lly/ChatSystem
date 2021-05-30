@@ -90,22 +90,41 @@ public class UserController {
     }
 
     public void receivedMsg(String id, String msg, int type) {
+
+        boolean isGroup = false;
+
         if (chattingPanel.get(id) == null) {
 
            ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
 
+            for (GroupChat groupChat : groupChats) {
 
-           for(int i=0;i<groupChats.size();i++){
+                if (id.equals(groupChat.groupId)) {
+                    isGroup = true;
+                    Friend sender = new Friend(id, groupChat.groupName);
+                    sender.state = 1;
+                    chattingPanel.put(id, new ChatGUI(this, sender));
+                    break;
+                }
+            }
 
-               if(id.equals(groupChats.get(i).groupId)){
-                   Friend sender = new Friend(id,groupChats.get(i).groupName);
-                   sender.state = 1;
-                   chattingPanel.put(id, new ChatGUI(this, sender));
-                   break;
+
+           if(!isGroup){
+
+               Friend sender = new Friend(id, "匿名");
+               for (Friend fri : this.friendGUI.friendsList) {
+                   if (fri.id.equals(id)) {
+                       sender.nickName = fri.nickName;
+                       sender.state = 1;
+                       break;
+                   }
                }
+               chattingPanel.put(id, new ChatGUI(this, sender));
            }
 
         }
+
+
         chattingPanel.get(id).receiveMsg(msg, type);
     }
 

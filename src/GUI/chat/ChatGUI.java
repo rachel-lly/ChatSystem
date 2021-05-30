@@ -6,6 +6,9 @@ import client.control.UserController;
 import client.ChatRecord.ChatRecord;
 import client.ChatRecord.ChatRecordManager;
 import client.utils.Utils;
+import model.GroupChat;
+import server.user.UsersContainer;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
@@ -39,8 +42,26 @@ public class ChatGUI {
     static String chatIconURL = "/GUI/assets/chat_icon.png";
 
     public void update() {
-        this.frame.setTitle(friend.toString());
-        this.chatPanel.friend = friend;
+
+       boolean group = false;
+
+
+       ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+
+       for(int i=0;i<list.size();i++){
+           if(groupName.equals(list.get(i).groupName)){
+               isGroup = true;
+               this.frame.setTitle(list.get(i).toString());
+               this.chatPanel.friend = new Friend(list.get(i).groupId,list.get(i).groupName,1);
+           }
+       }
+
+       if(!isGroup){
+           this.frame.setTitle(friend.toString());
+           this.chatPanel.friend = friend;
+       }
+
+
 
         if (friend.state == 1) {
             this.sendButton.setEnabled(true);
