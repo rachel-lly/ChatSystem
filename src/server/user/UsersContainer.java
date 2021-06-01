@@ -1,6 +1,7 @@
 package server.user;
 
 import model.GroupChat;
+import model.User;
 import server.database.MySqlLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;

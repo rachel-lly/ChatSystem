@@ -1,4 +1,4 @@
-package GUI.chat;
+package UI.chat;
 
 import client.control.UserController;
 import client.utils.Utils;
@@ -9,7 +9,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public class RightBubble extends JPanel {
 
-    static String fileIconURL = "/GUI/assets/whiteFile.png";
+    static String fileIconURL = "/UI/assets/whiteFile.png";
 
     @Override
     protected void paintComponent(final Graphics g) {

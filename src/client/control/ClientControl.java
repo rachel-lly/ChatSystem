@@ -1,20 +1,12 @@
 package client.control;
 
-import GUI.chat.LeftBubble;
-import GUI.chat.RightBubble;
-import GUI.friend.Friend;
-import GUI.login.Login;
-import GUI.utils.Utils;
+import model.Friend;
+import UI.utils.Utils;
 import client.ChatRecord.FileFolder;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
-import server.control.ServerControl;
-import server.database.MySqlLoader;
-import server.user.OnlineUser;
-import server.user.User;
 import server.user.UsersContainer;
 
-import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -292,7 +284,7 @@ public class ClientControl {
 
         @Override
         public void failed(Throwable ex, Object attachment) {
-            Utils.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.friendGUI.frame);
+            Utils.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.friendUI.frame);
             callback.exit();
             ex.printStackTrace();
         }

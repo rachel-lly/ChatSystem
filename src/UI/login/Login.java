@@ -1,7 +1,7 @@
-package GUI.login;
+package UI.login;
 
 
-import GUI.utils.Utils;
+import UI.utils.Utils;
 import client.control.UserController;
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public class Login implements KeyListener {
 
     public static String id;
 
-    static String iconURL = "/GUI/assets/chat_icon.png";
+    static String iconURL = "/UI/assets/chat_icon.png";
 
     public Login(UserController callback) {
         frame = new JFrame("ChatSystem");

@@ -1,13 +1,11 @@
 package server.database;
 
 import model.GroupChat;
-import server.user.User;
+import model.User;
 
-import java.rmi.activation.ActivationGroupID;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 public class MySqlLoader {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";

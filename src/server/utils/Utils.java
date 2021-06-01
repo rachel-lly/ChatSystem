@@ -2,7 +2,7 @@ package server.utils;
 
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.binary.Base64;
-import server.user.User;
+import model.User;
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

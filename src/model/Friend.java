@@ -1,4 +1,4 @@
-package GUI.friend;
+package model;
 
 
 public class Friend {

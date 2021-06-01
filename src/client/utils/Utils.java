@@ -1,6 +1,6 @@
 package client.utils;
 
-import GUI.friend.Friend;
+import model.Friend;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 

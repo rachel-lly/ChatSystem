@@ -1,8 +1,9 @@
-package GUI.friend;
+package UI.friend;
 
-import GUI.login.Login;
-import GUI.utils.Utils;
+import UI.login.Login;
+import UI.utils.Utils;
 import client.control.UserController;
+import model.Friend;
 import model.GroupChat;
 import server.user.UsersContainer;
 
@@ -16,11 +17,11 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FriendGUI {
+public class FriendUI {
 
     public boolean isFirst = true;
 
-    static String iconURL = "/GUI/assets/chat_icon.png";
+    static String iconURL = "/UI/assets/chat_icon.png";
 
     public JFrame frame;
 
@@ -46,13 +47,13 @@ public class FriendGUI {
 
 
 
-    public FriendGUI(UserController callback) {
+    public FriendUI(UserController callback) {
         this(new ArrayList<>(), new ArrayList<>(),callback);
     }
 
-    public FriendGUI(ArrayList<Friend> friendsList,
-                     ArrayList<Friend> applyFriendsList,
-                     UserController callback) {
+    public FriendUI(ArrayList<Friend> friendsList,
+                    ArrayList<Friend> applyFriendsList,
+                    UserController callback) {
 
         ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
         for(int i=0;i<list.size();i++){

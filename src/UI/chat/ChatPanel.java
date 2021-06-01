@@ -1,6 +1,6 @@
-package GUI.chat;
+package UI.chat;
 
-import GUI.friend.Friend;
+import model.Friend;
 import javax.swing.*;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;

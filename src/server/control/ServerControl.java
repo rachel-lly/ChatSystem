@@ -4,7 +4,7 @@ import client.control.ClientControl;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import server.user.OnlineUser;
-import server.user.User;
+import model.User;
 import server.user.UsersContainer;
 import server.utils.Utils;
 import java.io.IOException;

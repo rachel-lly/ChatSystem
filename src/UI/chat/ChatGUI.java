@@ -1,9 +1,9 @@
-package GUI.chat;
+package UI.chat;
 
 
-import GUI.friend.Friend;
+import model.Friend;
 import client.control.UserController;
-import client.ChatRecord.ChatRecord;
+import model.ChatRecord;
 import client.ChatRecord.ChatRecordManager;
 import client.utils.Utils;
 import model.GroupChat;
@@ -39,7 +39,7 @@ public class ChatGUI {
     boolean isGroup = false;
     String groupName = "";
 
-    static String chatIconURL = "/GUI/assets/chat_icon.png";
+    static String chatIconURL = "/UI/assets/chat_icon.png";
 
     public void update() {
 
@@ -89,7 +89,7 @@ public class ChatGUI {
             e.printStackTrace();
         }
         frame = new JFrame();
-        frame.setBackground(GUI.utils.Utils.Theme.ThemeColor1);
+        frame.setBackground(UI.utils.Utils.Theme.ThemeColor1);
 
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension d = t.getScreenSize();
@@ -115,7 +115,7 @@ public class ChatGUI {
         this.groupName = name;
 
         frame = new JFrame();
-        frame.setBackground(GUI.utils.Utils.Theme.ThemeColor1);
+        frame.setBackground(UI.utils.Utils.Theme.ThemeColor1);
 
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension d = t.getScreenSize();

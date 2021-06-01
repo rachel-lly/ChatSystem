@@ -1,10 +1,10 @@
 package client.control;
 
-import GUI.login.Login;
-import GUI.chat.ChatGUI;
-import GUI.friend.Friend;
-import GUI.friend.FriendGUI;
-import GUI.utils.Utils;
+import UI.login.Login;
+import UI.chat.ChatGUI;
+import model.Friend;
+import UI.friend.FriendUI;
+import UI.utils.Utils;
 import model.GroupChat;
 import server.user.UsersContainer;
 
@@ -23,7 +23,7 @@ public class UserController {
 
     public ClientControl client;
     public Login loggingLogin;
-    public FriendGUI friendGUI;
+    public FriendUI friendUI;
 
     public HashMap<String, ChatGUI> chattingPanel;
     public String id;
@@ -32,7 +32,7 @@ public class UserController {
     public boolean login(String id, String password) throws Exception {
         client.login(id, password);
         this.id = id;
-        this.friendGUI.frame.setVisible(true);
+        this.friendUI.frame.setVisible(true);
         return true;
     }
 
@@ -60,7 +60,7 @@ public class UserController {
 
 
     public void updateFriendList(ArrayList<Friend> friendList) {
-        this.friendGUI.friendsList = friendList;
+        this.friendUI.friendsList = friendList;
 
         for (Friend friend : friendList) {
             if (this.chattingPanel.get(friend.id) != null) {
@@ -68,13 +68,13 @@ public class UserController {
                 this.chattingPanel.get(friend.id).update();
             }
         }
-        this.friendGUI.updateInformation();
+        this.friendUI.updateInformation();
     }
 
 
 
     public void updateApplyFriendList(ArrayList<Friend> applyFriendsList) {
-        this.friendGUI.applyFriendsList = applyFriendsList;
+        this.friendUI.applyFriendsList = applyFriendsList;
     }
 
     public boolean closeChattingPanel(Friend friend) {
@@ -112,7 +112,7 @@ public class UserController {
            if(!isGroup){
 
                Friend sender = new Friend(id, "匿名");
-               for (Friend fri : this.friendGUI.friendsList) {
+               for (Friend fri : this.friendUI.friendsList) {
                    if (fri.id.equals(id)) {
                        sender.nickName = fri.nickName;
                        sender.state = 1;
@@ -189,11 +189,11 @@ public class UserController {
         this.friendList = new ArrayList<>();
         this.applyFriendList = new ArrayList<>();
         this.client = new ClientControl(this);
-        this.friendGUI = new FriendGUI(this.friendList, this.applyFriendList,this);
+        this.friendUI = new FriendUI(this.friendList, this.applyFriendList,this);
         this.chattingPanel = new HashMap<>();
     }
 
     public void errorOccupy(final String msg) {
-        new Thread(() -> Utils.showErrorMsg(msg, "错误", friendGUI.frame)).start();
+        new Thread(() -> Utils.showErrorMsg(msg, "错误", friendUI.frame)).start();
     }
 }

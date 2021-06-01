@@ -1,6 +1,6 @@
-package GUI.chat;
+package UI.chat;
 
-import GUI.utils.Utils;
+import UI.utils.Utils;
 import client.control.UserController;
 import client.ChatRecord.FileFolder;
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class LeftBubble extends JPanel {
     private final int strokeThickness;
     private final int padding;
 
-    static String fileIconURL = "/GUI/assets/blackFile.png";
+    static String fileIconURL = "/UI/assets/blackFile.png";
 
     {
         strokeThickness = 3;

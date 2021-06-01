@@ -1,6 +1,8 @@
 package client.ChatRecord;
 
 
+import model.ChatRecord;
+
 import java.io.*;
 import java.util.ArrayList;
 
