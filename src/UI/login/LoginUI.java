@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class Login implements KeyListener {
+public class LoginUI implements KeyListener {
     private final JFrame frame;
     private JTextField idField;
     private JPasswordField passwordField;
@@ -19,7 +19,7 @@ public class Login implements KeyListener {
 
     static String iconURL = "/UI/assets/chat_icon.png";
 
-    public Login(UserController callback) {
+    public LoginUI(UserController callback) {
         frame = new JFrame("ChatSystem");
         frame.setBackground(Utils.Theme.ThemeColor1);
 
@@ -27,7 +27,7 @@ public class Login implements KeyListener {
         Dimension d = t.getScreenSize();
 
         frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 510, 380);
-        frame.setIconImage(new ImageIcon(Login.class.getResource(iconURL)).getImage());
+        frame.setIconImage(new ImageIcon(LoginUI.class.getResource(iconURL)).getImage());
         frame.setResizable(false);
 
         JPanel northPanel = creatNorth();
@@ -53,7 +53,7 @@ public class Login implements KeyListener {
         jp.setLayout(null);
         jp.setPreferredSize(new Dimension(0, 190));
 
-        ImageIcon in = new ImageIcon(Login.class.getResource(iconURL));
+        ImageIcon in = new ImageIcon(LoginUI.class.getResource(iconURL));
         JLabel cc = new JLabel(in);
         cc.setBounds(0, 0, 500, 190);
         cc.setOpaque(false);
@@ -135,9 +135,9 @@ public class Login implements KeyListener {
     }
 
     class LoginHandler implements ActionListener {
-        Login uiFrame;
+        LoginUI uiFrame;
 
-        public LoginHandler(Login uiFrame) {
+        public LoginHandler(LoginUI uiFrame) {
             super();
             this.uiFrame = uiFrame;
         }

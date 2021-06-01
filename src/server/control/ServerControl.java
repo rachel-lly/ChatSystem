@@ -3,9 +3,9 @@ package server.control;
 import client.control.ClientControl;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
-import server.user.OnlineUser;
+import model.OnlineUser;
 import model.User;
-import server.user.UsersContainer;
+import db.UsersContainer;
 import server.utils.Utils;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -34,9 +34,6 @@ public class ServerControl {
     public AsynchronousServerSocketChannel serverChannel = null;
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
-    public HashMap<String, OnlineUser> getOnlineUserList() {
-        return onlineUserList;
-    }
 
     public ServerControl() throws IOException {
         this(ClientControl.PORT_DEFAULT);

@@ -3,7 +3,6 @@ package client.utils;
 import model.Friend;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-
 import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.security.KeyPairGenerator.getInstance;
 

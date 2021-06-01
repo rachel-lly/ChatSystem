@@ -1,12 +1,12 @@
 package client.control;
 
-import UI.login.Login;
-import UI.chat.ChatGUI;
+import UI.login.LoginUI;
+import UI.chat.ChatUI;
 import model.Friend;
 import UI.friend.FriendUI;
 import UI.utils.Utils;
 import model.GroupChat;
-import server.user.UsersContainer;
+import db.UsersContainer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,14 +18,12 @@ public class UserController {
     public ArrayList<Friend> applyFriendList;
     public ArrayList<Friend> friendList;
 
-    public ArrayList<String> groupNameList;
-
 
     public ClientControl client;
-    public Login loggingLogin;
+    public LoginUI loggingLoginUI;
     public FriendUI friendUI;
 
-    public HashMap<String, ChatGUI> chattingPanel;
+    public HashMap<String, ChatUI> chattingPanel;
     public String id;
 
 
@@ -45,16 +43,16 @@ public class UserController {
         return true;
     }
 
-    public void openChattingPanel(Friend friend) {
+    public void openChatPanel(Friend friend) {
         if (chattingPanel.get(friend.id) != null) {
         } else {
-            chattingPanel.put(friend.id, new ChatGUI(this, friend));
+            chattingPanel.put(friend.id, new ChatUI(this, friend));
         }
     }
 
     public void openGroupChatPanel(String groupName) {
 
-        chattingPanel.put(groupName, new ChatGUI(this, groupName));
+        chattingPanel.put(groupName, new ChatUI(this, groupName));
 
     }
 
@@ -77,7 +75,7 @@ public class UserController {
         this.friendUI.applyFriendsList = applyFriendsList;
     }
 
-    public boolean closeChattingPanel(Friend friend) {
+    public boolean closeChatPanel(Friend friend) {
         boolean res = true;
 
         if (chattingPanel.get(friend.id) == null) {
@@ -103,7 +101,7 @@ public class UserController {
                     isGroup = true;
                     Friend sender = new Friend(id, groupChat.groupName);
                     sender.state = 1;
-                    chattingPanel.put(id, new ChatGUI(this, sender));
+                    chattingPanel.put(id, new ChatUI(this, sender));
                     break;
                 }
             }
@@ -119,7 +117,7 @@ public class UserController {
                        break;
                    }
                }
-               chattingPanel.put(id, new ChatGUI(this, sender));
+               chattingPanel.put(id, new ChatUI(this, sender));
            }
 
         }
@@ -182,7 +180,7 @@ public class UserController {
 
     public UserController() throws IOException {
         init();
-        this.loggingLogin = new Login(this);
+        this.loggingLoginUI = new LoginUI(this);
     }
 
     public void init() throws IOException {

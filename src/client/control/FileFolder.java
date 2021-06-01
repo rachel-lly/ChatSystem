@@ -1,4 +1,4 @@
-package client.ChatRecord;
+package client.control;
 
 import java.io.File;
 

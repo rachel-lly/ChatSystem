@@ -4,11 +4,10 @@ package UI.chat;
 import model.Friend;
 import client.control.UserController;
 import model.ChatRecord;
-import client.ChatRecord.ChatRecordManager;
+import client.control.ChatRecordManager;
 import client.utils.Utils;
 import model.GroupChat;
-import server.user.UsersContainer;
-
+import db.UsersContainer;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class ChatGUI {
+public class ChatUI {
 
 
     public JFrame frame;
@@ -42,9 +41,6 @@ public class ChatGUI {
     static String chatIconURL = "/UI/assets/chat_icon.png";
 
     public void update() {
-
-       boolean group = false;
-
 
        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
 
@@ -78,7 +74,7 @@ public class ChatGUI {
         }
     }
 
-    public ChatGUI(UserController callback, Friend friend) {
+    public ChatUI(UserController callback, Friend friend) {
         this.friend = friend;
         this.callback = callback;
         this.isGroup = false;
@@ -95,7 +91,7 @@ public class ChatGUI {
         Dimension d = t.getScreenSize();
 
         frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 700, 700);
-        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatGUI.class.getResource(chatIconURL))).getImage());
+        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatUI.class.getResource(chatIconURL))).getImage());
         frame.setResizable(true);
         frame.setLayout(new BorderLayout());
         frame.add(creatSouth(), BorderLayout.SOUTH);
@@ -104,11 +100,11 @@ public class ChatGUI {
 
         this.callback = callback;
         this.frame.addWindowListener(new CloseWindow());
-        this.loadChattingRecord();
+        this.loadChatRecord();
         this.update();
     }
 
-    public ChatGUI(UserController callback, String name) {
+    public ChatUI(UserController callback, String name) {
 
         this.callback = callback;
         this.isGroup = true;
@@ -121,7 +117,7 @@ public class ChatGUI {
         Dimension d = t.getScreenSize();
 
         frame.setBounds((d.width - d.width / 3) / 2, (d.height - d.height / 3) / 2, 700, 700);
-        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatGUI.class.getResource(chatIconURL))).getImage());
+        frame.setIconImage(new ImageIcon(Objects.requireNonNull(ChatUI.class.getResource(chatIconURL))).getImage());
         frame.setResizable(true);
         frame.setLayout(new BorderLayout());
         frame.add(creatSouth(), BorderLayout.SOUTH);
@@ -134,7 +130,7 @@ public class ChatGUI {
         this.update();
     }
 
-    public void loadChattingRecord() {
+    public void loadChatRecord() {
         if (this.chatRecords == null) {
             return;
         }
@@ -356,7 +352,7 @@ public class ChatGUI {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                callback.closeChattingPanel(friend);
+                callback.closeChatPanel(friend);
             }
 
             dispose();

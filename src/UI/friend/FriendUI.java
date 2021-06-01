@@ -1,12 +1,11 @@
 package UI.friend;
 
-import UI.login.Login;
+import UI.login.LoginUI;
 import UI.utils.Utils;
 import client.control.UserController;
 import model.Friend;
 import model.GroupChat;
-import server.user.UsersContainer;
-
+import db.UsersContainer;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -101,7 +100,7 @@ public class FriendUI {
     public void init() {
         this.frame = new JFrame("聊天列表");
         this.frame.setSize(400, 450);
-        this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(Login.class.getResource(iconURL))).getImage());
+        this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(LoginUI.class.getResource(iconURL))).getImage());
         this.frame.setLocationRelativeTo(null);
         this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,7 +153,7 @@ public class FriendUI {
                             Utils.showInformationMsg("删除好友成功","提示",null);
                         }
                     } else {
-                        callback.openChattingPanel(friend);
+                        callback.openChatPanel(friend);
                     }
 
                 }
@@ -210,9 +209,6 @@ public class FriendUI {
         addGroupChatButton.addActionListener( e -> addGroupChat());
         jp.add(addGroupChatButton);
 
-//        showApplicationButton = Utils.createButton("通知");
-//        showApplicationButton.addActionListener(e -> applicationList());
-//        jp.add(showApplicationButton);
 
         return jp;
     }
@@ -295,36 +291,5 @@ public class FriendUI {
         dialog.setVisible(true);
     }
 
-    public void applicationList() {
-        JDialog dialog = new JDialog(this.frame, "好友申请", true);
-        dialog.setBounds(400, 200, 350, 500);
-        dialog.setLayout(new BorderLayout());
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(0, 1));
 
-        for (Friend friend : this.applyFriendsList) {
-            JButton tempButton = Utils.createButton(new Friend(friend.id, friend.nickName).toString());
-            JPanel tempPanel = new JPanel();
-
-            tempPanel.setLayout(new BorderLayout());
-            tempButton.setBounds(0, 0, 0, 40);
-            tempButton.addActionListener(e -> {
-                ArrayList<Friend> tempArrayList = new ArrayList<>();
-                String[] tempStrings = tempButton.getText().split("@");
-
-                panel.remove(tempPanel);
-                panel.updateUI();
-
-                applyFriendsList.remove(tempButton.getText());
-                tempArrayList.add(new Friend(tempStrings[1], tempStrings[0]));
-                callback.addFriends(tempArrayList);
-            });
-
-            tempPanel.add(tempButton, BorderLayout.NORTH);
-            panel.add(tempPanel);
-        }
-        dialog.add(new JScrollPane(panel), BorderLayout.NORTH);
-        dialog.setLocationRelativeTo(this.frame);
-        dialog.setVisible(true);
-    }
 }

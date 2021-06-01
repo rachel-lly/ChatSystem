@@ -2,11 +2,9 @@ package client.control;
 
 import model.Friend;
 import UI.utils.Utils;
-import client.ChatRecord.FileFolder;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
-import server.user.UsersContainer;
-
+import db.UsersContainer;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;

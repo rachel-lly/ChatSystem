@@ -1,8 +1,7 @@
-package server.database;
+package db;
 
 import model.GroupChat;
 import model.User;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
@@ -125,15 +124,13 @@ public class MySqlLoader {
 
 
         try {
-            this.statement.execute(String.format(SET_GROUP_NAME,"500"+String.valueOf(1000*Math.random()),groupName));
+            this.statement.execute(String.format(SET_GROUP_NAME,"500"+1000*Math.random(),groupName));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
 
-    public void insertUsers() {
-    }
 
     public void connectFriend(String srcId, String dstId) {
         try {
