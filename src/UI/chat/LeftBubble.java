@@ -14,7 +14,7 @@ public class LeftBubble extends JPanel {
     private final int strokeThickness;
     private final int padding;
 
-    static String fileIconURL = "/UI/assets/blackFile.png";
+    static String fileIconURL = "/UI/assets/blackFile_icon.png";
 
     {
         strokeThickness = 3;

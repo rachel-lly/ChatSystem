@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MySqlLoader {
+
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/LiveChat?serverTimezone=UTC";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/chatsystem?serverTimezone=UTC";
     static final String USER = "root";
     static final String PASS = "root";
 
-    public static final String STANDARD_TABLE =
-            "CREATE TABLE IF NOT EXISTS `userInfo`(" +
+    public static final String STANDARD_USER_TABLE =
+            "CREATE TABLE IF NOT EXISTS `user`(" +
                     "`id` VARCHAR(20) NOT NULL, " +
                     "`password` VARCHAR(100), " +
                     "`nickName` VARCHAR(20), " +
@@ -21,8 +22,8 @@ public class MySqlLoader {
                     ");";
 
 
-    public static final String GROUP_CHAT_TABLE =
-            "CREATE TABLE IF NOT EXISTS `groupChatNameList`(" +
+    public static final String STANDARD_GROUP_CHAT_TABLE =
+            "CREATE TABLE IF NOT EXISTS `groupChatList`(" +
                     "`id` VARCHAR(20) NOT NULL, " +
                     "`groupChatName` VARCHAR(20) NOT NULL, " +
                     "PRIMARY KEY ( `groupChatName` )" +
@@ -31,19 +32,22 @@ public class MySqlLoader {
 
     public static final String STANDARD_FRIEND_TABLE =
             "CREATE TABLE IF NOT EXISTS `friendList`(" +
-                    "`srcid` VARCHAR(20) NOT NULL, " +
-                    "`dstid` VARCHAR(20) NOT NULL " +
+                    "`id` VARCHAR(20) NOT NULL, " +
+                    "`friendId` VARCHAR(20) NOT NULL " +
                     ");";
 
-    public static final String GET_GROUP_NAME = "SELECT * FROM groupChatNameList;";
-    public static final String SET_GROUP_NAME = "insert into groupChatNameList values(\"%s\",\"%s\");";
+    public static final String GET_GROUP_NAME = "SELECT * FROM groupChatList;";
+    public static final String SET_GROUP_NAME = "insert into groupChatList values(\"%s\",\"%s\");";
 
     public static final String STANDARD_INSERT_FRIEND_STRING = "insert into friendList values(\"%s\",\"%s\");";
-    public static final String STANDARD_SEARCH_FRIEND_STRING = "SELECT distinct f1.dstId FROM friendlist as f1 INNER JOIN friendlist as f2 ON f1.srcId = f2.dstId AND f2.srcId = f1.dstId WHERE f1.srcId = \"%s\";";
-    public static final String STANDARD_SEARCH_APPLY_FRIEND_STRING = "SELECT distinct  * from (select friendlist.srcid, friendlist.dstid FROM friendlist LEFT JOIN " +
-            "(SELECT f1.srcId, f1.dstId FROM friendlist as f1 INNER JOIN friendlist as f2 ON f1.srcId = f2.dstId AND f2.srcId = f1.dstId) as t1 " +
-            "ON friendlist.dstid = t1.dstid AND friendlist.srcid = t1.srcid where t1.srcid IS NULL) as t2 where t2.dstid = \"%s\";";
-    public static final String STANDARD_DELETE_FRIEND_STRING = "DELETE FROM friendlist WHERE dstId = \"%s\" and srcId = \"%s\";";
+
+    public static final String STANDARD_SEARCH_FRIEND_STRING = "SELECT distinct f1.friendId FROM friendList as f1 INNER JOIN friendList as f2 ON f1.id = f2.friendId AND f2.id = f1.friendId WHERE f1.id = \"%s\";";
+
+    public static final String STANDARD_SEARCH_APPLY_FRIEND_STRING = "SELECT distinct  * from (select friendList.id, friendList.friendId FROM friendList LEFT JOIN " +
+            "(SELECT f1.id, f1.friendId FROM friendList as f1 INNER JOIN friendList as f2 ON f1.id = f2.friendId AND f2.id = f1.friendId) as t1 " +
+            "ON friendList.friendId = t1.friendId AND friendList.id = t1.id where t1.id IS NULL) as t2 where t2.friendId = \"%s\";";
+
+    public static final String STANDARD_DELETE_FRIEND_STRING = "DELETE FROM friendList WHERE friendId = \"%s\" and id = \"%s\";";
 
     public Connection connection = null;
     public Statement statement = null;
@@ -64,7 +68,7 @@ public class MySqlLoader {
         isExist = true;
 
         try {
-            this.statement.executeQuery("use LiveChat;");
+            this.statement.executeQuery("use chatsystem;");
         } catch (SQLException se) {
             if (se.getErrorCode() == 1049) {
                 isExist = false;
@@ -73,17 +77,17 @@ public class MySqlLoader {
 
         if (!isExist) {
             try {
-                this.statement.executeQuery("create database LiveChat;");
+                this.statement.executeQuery("create database chatsystem;");
             } catch (SQLException se) {
                 se.printStackTrace();
             }
         }
 
         try {
-            this.statement.executeQuery("use LiveChat;");
-            this.statement.execute(STANDARD_TABLE);
+            this.statement.executeQuery("use chatsystem;");
+            this.statement.execute(STANDARD_USER_TABLE);
             this.statement.execute(STANDARD_FRIEND_TABLE);
-            this.statement.execute(GROUP_CHAT_TABLE);
+            this.statement.execute(STANDARD_GROUP_CHAT_TABLE);
         } catch (SQLException se) {
             se.printStackTrace();
         }
@@ -91,7 +95,7 @@ public class MySqlLoader {
 
     public void loadUsers(Map<String, User> dst) {
         try {
-            ResultSet rs = this.statement.executeQuery("SELECT * FROM userinfo;");
+            ResultSet rs = this.statement.executeQuery("SELECT * FROM user;");
 
             while (rs.next()) {
                 dst.put(rs.getString("id"), new User(rs.getString("id"), rs.getString("password"), rs.getString("nickName")));
@@ -124,7 +128,7 @@ public class MySqlLoader {
 
 
         try {
-            this.statement.execute(String.format(SET_GROUP_NAME,"500"+1000*Math.random(),groupName));
+            this.statement.execute(String.format(SET_GROUP_NAME,"500"+(int)(100*Math.random()),groupName));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -132,32 +136,32 @@ public class MySqlLoader {
 
 
 
-    public void connectFriend(String srcId, String dstId) {
+    public void connectFriend(String id, String friendId) {
         try {
-            this.statement.execute(String.format(STANDARD_INSERT_FRIEND_STRING, srcId, dstId));
+            this.statement.execute(String.format(STANDARD_INSERT_FRIEND_STRING, id, friendId));
         } catch (SQLException se) {
             se.printStackTrace();
         }
     }
 
-    public void deleteFriend(String srcId, String dstId) {
+    public void deleteFriend(String id, String friendId) {
         try {
-            this.statement.execute(String.format(STANDARD_DELETE_FRIEND_STRING, srcId, dstId));
-            this.statement.execute(String.format(STANDARD_DELETE_FRIEND_STRING, dstId, srcId));
+            this.statement.execute(String.format(STANDARD_DELETE_FRIEND_STRING, id, friendId));
+            this.statement.execute(String.format(STANDARD_DELETE_FRIEND_STRING, friendId, id));
         } catch (SQLException se) {
             se.printStackTrace();
         }
     }
 
-    public ArrayList<String> searchFriend(String srcId) {
+    public ArrayList<String> searchFriend(String id) {
         ArrayList<String> res = new ArrayList<>();
 
 
         try {
-            ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_FRIEND_STRING, srcId));
+            ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_FRIEND_STRING, id));
             while (rs.next()) {
 
-                res.add(rs.getString("dstid"));
+                res.add(rs.getString("friendId"));
             }
             rs.close();
         } catch (SQLException se) {
@@ -167,12 +171,12 @@ public class MySqlLoader {
         return res;
     }
 
-    public ArrayList<String> searchApplyFriend(String srcId) {
+    public ArrayList<String> searchApplyFriend(String id) {
         ArrayList<String> res = new ArrayList<>();
         try {
-            ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_APPLY_FRIEND_STRING, srcId));
+            ResultSet rs = this.statement.executeQuery(String.format(STANDARD_SEARCH_APPLY_FRIEND_STRING, id));
             while (rs.next()) {
-                res.add(rs.getString("srcid"));
+                res.add(rs.getString("id"));
             }
             rs.close();
         } catch (SQLException se) {

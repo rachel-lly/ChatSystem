@@ -28,16 +28,6 @@ public class ChatPanel extends JPanel {
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(seGroup2));
     }
 
-    public void addSentImage(String path) {
-        JPanel msgPanel = RightBubble.createImage(path);
-
-        seGroup1.addComponent(msgPanel);
-        seGroup2.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(msgPanel,
-                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(18, 18, 18);
-
-        this.updateUI();
-    }
-
     public void addReceived(String text, int type) {
         JPanel msgPanel = null;
 

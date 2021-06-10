@@ -33,11 +33,10 @@ public class FriendUI {
     public DefaultMutableTreeNode rootNode, onLine, offLine;
 
     public DefaultMutableTreeNode groupChat;
-    boolean isGroup = false;
+
 
     public UserController callback;
-    public JButton addFriendsButton,
-            deleteFriendButton, showApplicationButton;
+    public JButton addFriendsButton, deleteFriendButton;
 
     public JButton addGroupChatButton;
 

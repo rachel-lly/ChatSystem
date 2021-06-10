@@ -55,7 +55,7 @@ public class ServerControl {
         this.serverChannel.accept(null, new LoginHandler(this.serverChannel, this.onlineUserList));
 
         try {
-            System.out.println("服务器启动成功!");
+            System.out.println("Server started successfully!");
             while (!executor.awaitTermination(3, TimeUnit.SECONDS)) {
             }
         } catch (InterruptedException e) {
@@ -114,17 +114,9 @@ public class ServerControl {
                         for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
                             if (id.equals(resMap.get("id"))) {
                                 sendMsg(user.user.id, resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
-                                isSend = true;
                             }
                         }
 
-                        if (!isSend) {
-                            try {
-                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "您与" + resMap.get("id") + "并非好友！"), BANDWIDTH);
-                            } catch (InterruptedException | ExecutionException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
                     }
 
                 } else if (msgData.get(0) == 5) {
@@ -132,7 +124,7 @@ public class ServerControl {
                     if (msgData.get(1) == 1) {
                         for (String id : FriendStrings) {
                             if (UsersContainer.INSTANCE.users.get(id) == null) {
-                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "不存在！"), BANDWIDTH);
+                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
                             UsersContainer.INSTANCE.connectFriend(user.user.id, id);
@@ -148,7 +140,7 @@ public class ServerControl {
                     } else if (msgData.get(1) == 2) {
                         for (String id : FriendStrings) {
                             if (UsersContainer.INSTANCE.users.get(id) == null) {
-                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "不存在！"), BANDWIDTH);
+                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
                             UsersContainer.INSTANCE.deleteFriend(user.user.id, id);
@@ -167,14 +159,14 @@ public class ServerControl {
 
                 if (msgData.get(0) == 6) {
                     Map<String, Object> resMap = Utils.PackageUtils.fileUnPack(msgData, user.publicKey);
-                    System.out.println("收到文件");
-                    System.out.println("目标ID为：" + resMap.get("id"));
-                    System.out.println("名字为：" + resMap.get("name"));
-                    boolean isSend = false;
+                    System.out.println("receive file");
+                    System.out.println("To：" + resMap.get("id"));
+                    System.out.println("name：" + resMap.get("name"));
+
 
                     for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
                         if (id.equals(resMap.get("id")) && onlineUserList.get(resMap.get("id")) != null) {
-                            isSend = true;
+
                             byte[] data = Utils.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
                             new Thread(
                                     () -> {
@@ -188,13 +180,6 @@ public class ServerControl {
                         }
                     }
 
-                    if (!isSend) {
-                        try {
-                            sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 4, "您与" + resMap.get("id") + "并非好友!"))).get();
-                        } catch (InterruptedException | ExecutionException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -227,7 +212,7 @@ public class ServerControl {
             onlineUserList.remove(this.user.user.id);
             bufferDataMap.remove(this.user.user.id);
             userLogOut(user);
-            System.out.println("用户" + this.user.user.toString() + "下线" + "!当前在线用户数量：" + onlineUserList.size());
+            System.out.println("id:" + this.user.user.toString() + " Offline" + "!Current number of online users：" + onlineUserList.size());
         }
     }
 
@@ -341,12 +326,12 @@ public class ServerControl {
 
                                 if (targetUser == null) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 1, "用户名不存在")))
+                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 1, "id doesn't exist")))
                                                 .get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
                                     }
-                                    System.out.println("用户名不存在!");
+                                    System.out.println("id doesn't exist!");
 
                                     try {
                                         sc.close();
@@ -358,11 +343,11 @@ public class ServerControl {
                                 } else if (!Utils.LoginUtils.verifyPassword(infoMap.get("password"),
                                         targetUser.passwordMd5)) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 2, "密码错误"))).get();
+                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 2, "password error!"))).get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
                                     }
-                                    System.out.println("密码错误!");
+                                    System.out.println("password error!");
                                     try {
                                         sc.close();
                                     } catch (IOException e) {
@@ -372,11 +357,11 @@ public class ServerControl {
                                     return;
                                 } else if (onlineUserList.get(infoMap.get("id")) != null) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 3, "您的账号在其他地方被登录了!"))).get();
+                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 3, "Your account has been logged in elsewhere!"))).get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
                                     }
-                                    System.out.println("重复登录!");
+                                    System.out.println("Repeat login!");
 
                                     try {
                                         sc.close();
@@ -409,7 +394,7 @@ public class ServerControl {
                                         updateFriendList(onlineUserList.get(friendId));
                                     }
                                 }
-                                System.out.println("用户" + targetUser.toString() + "上线!当前在线用户数量：" + channel.size());
+                                System.out.println("id:" + targetUser.toString() + "online!Current number of online users：" + channel.size());
                             } else {
                                 try {
                                     sc.close();
@@ -421,7 +406,7 @@ public class ServerControl {
 
                         @Override
                         public void failed(Throwable ex, Object attachment) {
-                            System.out.println("登录超时!");
+                            System.out.println("login timeout!");
                             try {
                                 sc.close();
                             } catch (IOException e) {
@@ -433,7 +418,7 @@ public class ServerControl {
 
         @Override
         public void failed(Throwable ex, Object attachment) {
-            System.out.println("连接失败: " + ex);
+            System.out.println("connection failed: " + ex);
         }
     }
 }

@@ -9,7 +9,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public class RightBubble extends JPanel {
 
-    static String fileIconURL = "/UI/assets/whiteFile.png";
+    static String fileIconURL = "/UI/assets/whiteFile_icon.png";
 
     @Override
     protected void paintComponent(final Graphics g) {

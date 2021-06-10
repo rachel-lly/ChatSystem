@@ -109,7 +109,7 @@ public class UserController {
 
            if(!isGroup){
 
-               Friend sender = new Friend(id, "匿名");
+               Friend sender = new Friend(id, "anonymous");
                for (Friend fri : this.friendUI.friendsList) {
                    if (fri.id.equals(id)) {
                        sender.nickName = fri.nickName;
@@ -169,12 +169,13 @@ public class UserController {
     }
 
     public void exit() {
+        
         try {
             this.client.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("退出");
+        System.out.println("Exit");
         System.exit(0);
     }
 
@@ -192,6 +193,6 @@ public class UserController {
     }
 
     public void errorOccupy(final String msg) {
-        new Thread(() -> Utils.showErrorMsg(msg, "错误", friendUI.frame)).start();
+        new Thread(() -> Utils.showErrorMsg(msg, "error", friendUI.frame)).start();
     }
 }

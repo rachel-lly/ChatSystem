@@ -466,7 +466,7 @@ public class Utils {
                 cipher.init(Cipher.ENCRYPT_MODE, privateKey);
                 return rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data, privateKey.getModulus().bitLength());
             } catch (Exception e) {
-                throw new RuntimeException("加密字符串[" + Arrays.toString(data) + "]时遇到异常", e);
+                throw new RuntimeException("Encrypt [" + Arrays.toString(data) + "] encounter exception", e);
             }
         }
 
@@ -477,7 +477,7 @@ public class Utils {
                         publicKey);
                 return rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, data, publicKey.getModulus().bitLength());
             } catch (Exception e) {
-                throw new RuntimeException("解密字符串[" + Arrays.toString(data) + "]时遇到异常", e);
+                throw new RuntimeException("Decrypt [" + Arrays.toString(data) + "] encounter exception", e);
             }
         }
 
@@ -505,7 +505,7 @@ public class Utils {
                     offSet = i * maxBlock;
                 }
             } catch (Exception e) {
-                throw new RuntimeException("加解密阀值为[" + maxBlock + "]的数据时发生异常", e);
+                throw new RuntimeException("while decrypt data with [" + maxBlock + "] threshold encounter exception", e);
             }
             byte[] resultDatas = out.toByteArray();
             out.close();

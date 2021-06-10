@@ -61,13 +61,13 @@ public class ChatUI {
 
         if (friend.state == 1) {
             this.sendButton.setEnabled(true);
-            this.sendButton.setText("发送");
+            this.sendButton.setText("Send");
             this.toolImageButton.setEnabled(true);
             this.toolFileButton.setEnabled(true);
             this.editArea.setEnabled(true);
         } else {
             this.sendButton.setEnabled(false);
-            this.sendButton.setText("该好友当前不在线");
+            this.sendButton.setText("This friend isn't online at the moment");
             this.toolImageButton.setEnabled(false);
             this.toolFileButton.setEnabled(false);
             this.editArea.setEnabled(false);
@@ -208,7 +208,7 @@ public class ChatUI {
         jp.setLayout(new GridLayout(1, 0));
         jp.setPreferredSize(new Dimension(0, 30));
 
-        toolImageButton = new JButton("图片");
+        toolImageButton = new JButton("Picture");
         toolImageButton.setFont(new Font("menlo", Font.BOLD, 17));
         toolImageButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         toolImageButton.setContentAreaFilled(false);
@@ -249,7 +249,7 @@ public class ChatUI {
         };
         toolImageButton.addActionListener(imageAction);
         jp.add(toolImageButton);
-        toolFileButton = new JButton("文件");
+        toolFileButton = new JButton("File");
         toolFileButton.setFont(new Font("menlo", Font.BOLD, 17));
         toolFileButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         toolFileButton.setContentAreaFilled(false);
@@ -264,7 +264,7 @@ public class ChatUI {
                 if (fd.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
                     File file = fd.getSelectedFile();
                     if (file.length() > 1024 * 1024 * 10) {
-                        callback.errorOccupy("文件大于10MB!");
+                        callback.errorOccupy("The file size is larger than 10MB!");
                     } else {
                         sendMsg(file.getName(), 3);
                         new Thread(() -> {

@@ -27,12 +27,12 @@ public class ClientControl {
     public static int PORT_DEFAULT = 9023;
 
     public static final int BANDWIDTH_DEFAULT = 1024 * 9;
-    public static final int BANDWIDTH = 1024 * 8;
+
     public int port;
+
     public String address;
     public String publicKey = null, privateKey = null;
-    public HashMap<String, AsynchronousSocketChannel> channelList
-            = new HashMap<>();
+
     public ExecutorService executor = null;
     public AsynchronousChannelGroup channelGroup = null;
     public AsynchronousSocketChannel clientChannel = null;
@@ -68,7 +68,7 @@ public class ClientControl {
 
     public void sendMsg(String id, String msg, int type) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
 
 
@@ -102,7 +102,7 @@ public class ClientControl {
 
     public void addFriends(ArrayList<Friend> friends) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
         byte[] friendsData = client.utils.Utils.PackageUtils.friendListPack((byte) 1, friends, privateKey);
 
@@ -116,7 +116,7 @@ public class ClientControl {
 
     public void addGroupChat(String groupChatName) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
 
         UsersContainer.INSTANCE.setGroupNameList(groupChatName);
@@ -125,7 +125,7 @@ public class ClientControl {
 
     public ArrayList<GroupChat> addGroupChat() throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
 
         return UsersContainer.INSTANCE.getGroupNameList();
@@ -134,7 +134,7 @@ public class ClientControl {
 
     public void deleteFriends(ArrayList<Friend> friends) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
         byte[] friendsData =client.utils.Utils.PackageUtils.friendListPack((byte) 2, friends, privateKey);
 
@@ -147,7 +147,7 @@ public class ClientControl {
 
     public void sendFile(String id, String name, byte[] file) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
         byte[] msgData = client.utils.Utils.PackageUtils.filePack(id, name, file, privateKey);
 
@@ -212,10 +212,10 @@ public class ClientControl {
         try {
             if (msgData.get(0) == 3) {
                 Map<String, String> resMap = client.utils.Utils.PackageUtils.messageUnPack(msgData, publicKey);
-                System.out.println("数据类型：" + resMap.get("msgType"));
+                System.out.println("data type：" + resMap.get("msgType"));
                 callback.receivedMsg(resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
             } else if (msgData.get(0) == 4) {
-                System.out.println("收到错误");
+                System.out.println("receive error");
                 Map<String, String> resMap =client.utils.Utils.PackageUtils.errorUnPack(msgData);
                 callback.errorOccupy(resMap.get("message"));
             } else if (msgData.get(0) == 5) {
@@ -235,10 +235,10 @@ public class ClientControl {
                 File file = new File(FileFolder.getDefaultDirectory() + "/" + resMap.get("id") + "/files/" + resMap.get("name"));
                 client.utils.Utils.FileUtils.saveFile(file, (byte[]) resMap.get("file"));
                 callback.receivedMsg((String) resMap.get("id"), (String) resMap.get("name"), 3);
-                System.out.println("收到文件");
-                System.out.println("来自：" + resMap.get("id"));
-                System.out.println("名字为：" + resMap.get("name"));
-                System.out.println("保存在：" + file.getAbsolutePath());
+                System.out.println("Documents received");
+                System.out.println("From：" + resMap.get("id"));
+                System.out.println("Name：" + resMap.get("name"));
+                System.out.println("Save in：" + file.getAbsolutePath());
             }
         } catch (Exception e) {
             e.printStackTrace();

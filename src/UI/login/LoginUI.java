@@ -74,7 +74,7 @@ public class LoginUI implements KeyListener {
         jp.add(IDLabel);
 
         JLabel passwordLabel = new JLabel("password:");
-        passwordLabel.setBounds(60, 42, 210, 30);
+        passwordLabel.setBounds(61, 42, 210, 30);
         passwordLabel.setFont(new Font("menlo", Font.BOLD, 15));
         jp.add(passwordLabel);
 
@@ -112,7 +112,7 @@ public class LoginUI implements KeyListener {
         jp.setLayout(null);
         jp.setPreferredSize(new Dimension(0, 40));
 
-        JButton loginButton = Utils.createButton("登录");
+        JButton loginButton = Utils.createButton("Login");
         loginButton.setBounds(180, 0, 140, 30);
         loginButton.addActionListener(new LoginHandler(this));
         loginButton.setMargin(new Insets(0,0,0,0));
@@ -152,7 +152,7 @@ public class LoginUI implements KeyListener {
                         uiFrame.dispose();
                     }
                 } catch (Exception e1) {
-                    Utils.showErrorMsg(e1.getMessage(), "错误", frame);
+                    Utils.showErrorMsg(e1.getMessage(), "error", frame);
                     e1.printStackTrace();
                 }
             }
@@ -244,7 +244,7 @@ public class LoginUI implements KeyListener {
                         dispose();
                     }
                 } catch (Exception e) {
-                    Utils.showErrorMsg(e.getMessage(), "错误", frame);
+                    Utils.showErrorMsg(e.getMessage(), "Error", frame);
                     e.printStackTrace();
                 }
             }
