@@ -1,8 +1,8 @@
 package UI.chat;
 
 import UI.utils.Utils;
-import client.control.UserController;
-import client.control.FileFolder;
+import client.controller.UserController;
+import client.controller.FileFolder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;

@@ -1,6 +1,6 @@
 package server.control;
 
-import client.control.ClientControl;
+import client.controller.ClientController;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import model.OnlineUser;
@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
-public class ServerControl {
+public class ServerController {
 
     public int port;
 
@@ -35,11 +35,11 @@ public class ServerControl {
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
 
-    public ServerControl() throws IOException {
-        this(ClientControl.PORT_DEFAULT);
+    public ServerController() throws IOException {
+        this(ClientController.PORT_DEFAULT);
     }
 
-    public ServerControl(int port) throws IOException {
+    public ServerController(int port) throws IOException {
         this.port = port;
         this.init();
     }
@@ -212,7 +212,7 @@ public class ServerControl {
             onlineUserList.remove(this.user.user.id);
             bufferDataMap.remove(this.user.user.id);
             userLogOut(user);
-            System.out.println("id:" + this.user.user.toString() + " Offline" + "!Current number of online users：" + onlineUserList.size());
+            System.out.println("User:" + this.user.user.toString() + " Offline" + "!Current number of online users：" + onlineUserList.size());
         }
     }
 
@@ -394,7 +394,7 @@ public class ServerControl {
                                         updateFriendList(onlineUserList.get(friendId));
                                     }
                                 }
-                                System.out.println("id:" + targetUser.toString() + "online!Current number of online users：" + channel.size());
+                                System.out.println("User:" + targetUser.toString() + "online!Current number of online users：" + channel.size());
                             } else {
                                 try {
                                     sc.close();

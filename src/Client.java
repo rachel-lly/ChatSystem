@@ -1,6 +1,6 @@
 
 
-import client.control.UserController;
+import client.controller.UserController;
 
 import java.io.IOException;
 

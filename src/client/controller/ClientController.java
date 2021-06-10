@@ -1,4 +1,4 @@
-package client.control;
+package client.controller;
 
 import model.Friend;
 import UI.utils.Utils;
@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ClientControl {
+public class ClientController {
 
     public static String ADDRESS_DEFAULT = "127.0.0.1";
 
@@ -83,11 +83,11 @@ public class ClientControl {
 
 
 
-    public ClientControl(UserController callback) throws IOException {
+    public ClientController(UserController callback) throws IOException {
         this(callback, ADDRESS_DEFAULT, PORT_DEFAULT);
     }
 
-    public ClientControl(UserController callback, String address, int port) throws IOException {
+    public ClientController(UserController callback, String address, int port) throws IOException {
         this.packageBuffer = new HashMap<>();
         this.callback = callback;
         this.address = address;

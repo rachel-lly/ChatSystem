@@ -2,9 +2,9 @@ package UI.chat;
 
 
 import model.Friend;
-import client.control.UserController;
+import client.controller.UserController;
 import model.ChatRecord;
-import client.control.ChatRecordManager;
+import client.controller.ChatRecordManager;
 import client.utils.Utils;
 import model.GroupChat;
 import db.UsersContainer;

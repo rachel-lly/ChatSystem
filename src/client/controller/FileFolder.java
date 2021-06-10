@@ -1,4 +1,4 @@
-package client.control;
+package client.controller;
 
 import java.io.File;
 

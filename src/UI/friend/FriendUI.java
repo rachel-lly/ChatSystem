@@ -2,7 +2,7 @@ package UI.friend;
 
 import UI.login.LoginUI;
 import UI.utils.Utils;
-import client.control.UserController;
+import client.controller.UserController;
 import model.Friend;
 import model.GroupChat;
 import db.UsersContainer;

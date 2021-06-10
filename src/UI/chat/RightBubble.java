@@ -1,6 +1,6 @@
 package UI.chat;
 
-import client.control.UserController;
+import client.controller.UserController;
 import client.utils.Utils;
 import javax.swing.*;
 import java.awt.*;

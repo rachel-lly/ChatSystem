@@ -2,7 +2,7 @@ package UI.login;
 
 
 import UI.utils.Utils;
-import client.control.UserController;
+import client.controller.UserController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

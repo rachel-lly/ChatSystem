@@ -1,4 +1,4 @@
-package client.control;
+package client.controller;
 
 import UI.login.LoginUI;
 import UI.chat.ChatUI;
@@ -19,7 +19,7 @@ public class UserController {
     public ArrayList<Friend> friendList;
 
 
-    public ClientControl client;
+    public ClientController client;
     public LoginUI loggingLoginUI;
     public FriendUI friendUI;
 
@@ -187,7 +187,7 @@ public class UserController {
     public void init() throws IOException {
         this.friendList = new ArrayList<>();
         this.applyFriendList = new ArrayList<>();
-        this.client = new ClientControl(this);
+        this.client = new ClientController(this);
         this.friendUI = new FriendUI(this.friendList, this.applyFriendList,this);
         this.chattingPanel = new HashMap<>();
     }
