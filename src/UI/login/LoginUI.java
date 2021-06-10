@@ -69,12 +69,12 @@ public class LoginUI implements KeyListener {
         jp.setPreferredSize(new Dimension(140, 0));
 
         JLabel IDLabel = new JLabel("ID:");
-        IDLabel.setBounds(122, 10, 100, 30);
+        IDLabel.setBounds(120, 10, 100, 30);
         IDLabel.setFont(new Font("menlo", Font.BOLD, 15));
         jp.add(IDLabel);
 
         JLabel passwordLabel = new JLabel("password:");
-        passwordLabel.setBounds(68, 42, 210, 30);
+        passwordLabel.setBounds(60, 42, 210, 30);
         passwordLabel.setFont(new Font("menlo", Font.BOLD, 15));
         jp.add(passwordLabel);
 
@@ -88,7 +88,7 @@ public class LoginUI implements KeyListener {
         jp.setPreferredSize(new Dimension(0, 220));
 
         idField = new JTextField(10);
-        idField.setBounds(11, 10, 200, 30);
+        idField.setBounds(10, 10, 200, 30);
         idField.setFont(new Font("menlo", Font.BOLD, 17));
         idField.addFocusListener(new JTextFieldHandler(idField, "ID"));
         idField.setOpaque(false);
@@ -96,7 +96,7 @@ public class LoginUI implements KeyListener {
         jp.add(idField);
 
         passwordField = new JPasswordField(18);
-        passwordField.setBounds(11, 42, 200, 30);
+        passwordField.setBounds(10, 42, 200, 30);
         passwordField.setFont(new Font("menlo", Font.BOLD, 17));
         passwordField.addFocusListener(new JPasswordFieldHandler(passwordField, "password"));
         passwordField.setOpaque(false);
