@@ -7,7 +7,6 @@ import UI.friend.FriendUI;
 import UI.utils.Utils;
 import model.GroupChat;
 import db.UsersContainer;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;

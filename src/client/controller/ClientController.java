@@ -43,7 +43,7 @@ public class ClientController {
 
    public void sendGroupMsg(String groupName, String msg, int type) throws MsgException {
         if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "未连接到服务器");
+            throw new MsgException(1, "Unconnected to server");
         }
 
 

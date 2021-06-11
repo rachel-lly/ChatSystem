@@ -1,10 +1,8 @@
 package client.controller;
 
-
 import model.ChatRecord;
 import java.io.*;
 import java.util.ArrayList;
-
 
 public class ChatRecordManager {
 

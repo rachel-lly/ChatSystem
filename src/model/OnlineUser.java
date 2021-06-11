@@ -1,7 +1,5 @@
 package model;
 
-import model.User;
-
 import java.nio.channels.AsynchronousSocketChannel;
 
 
