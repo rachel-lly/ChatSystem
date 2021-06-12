@@ -4,7 +4,7 @@ import UI.login.LoginUI;
 import UI.chat.ChatUI;
 import model.Friend;
 import UI.friend.FriendUI;
-import UI.utils.Utils;
+import UI.util.DesignUtil;
 import model.GroupChat;
 import db.UsersContainer;
 import java.io.*;
@@ -192,6 +192,6 @@ public class UserController {
     }
 
     public void errorOccupy(final String msg) {
-        new Thread(() -> Utils.showErrorMsg(msg, "error", friendUI.frame)).start();
+        new Thread(() -> DesignUtil.showErrorMsg(msg, "error", friendUI.frame)).start();
     }
 }

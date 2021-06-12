@@ -1,4 +1,4 @@
-package client.utils;
+package client.util;
 
 import model.Friend;
 import org.apache.commons.codec.binary.Base64;
@@ -23,7 +23,7 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.security.KeyPairGenerator.getInstance;
 
-public class Utils {
+public class ClientUtil {
 
     public static class PackageUtils {
         public static ArrayList<byte[]> SecondaryPack(byte[] src, int blockSize) {

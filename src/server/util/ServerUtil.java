@@ -1,4 +1,4 @@
-package server.utils;
+package server.util;
 
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.binary.Base64;
@@ -16,7 +16,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
-public class Utils {
+public class ServerUtil {
 
 
 

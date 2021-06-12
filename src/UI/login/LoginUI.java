@@ -1,7 +1,7 @@
 package UI.login;
 
 
-import UI.utils.Utils;
+import UI.util.DesignUtil;
 import client.controller.UserController;
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class LoginUI implements KeyListener {
 
     public LoginUI(UserController callback) {
         frame = new JFrame("ChatSystem");
-        frame.setBackground(Utils.Theme.ThemeColor1);
+        frame.setBackground(DesignUtil.Theme.ThemeColor);
 
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension d = t.getScreenSize();
@@ -112,7 +112,7 @@ public class LoginUI implements KeyListener {
         jp.setLayout(null);
         jp.setPreferredSize(new Dimension(0, 40));
 
-        JButton loginButton = Utils.createButton("Login");
+        JButton loginButton = DesignUtil.createButton("Login");
         loginButton.setBounds(180, 0, 140, 30);
         loginButton.addActionListener(new LoginHandler(this));
         loginButton.setMargin(new Insets(0,0,0,0));
@@ -152,7 +152,7 @@ public class LoginUI implements KeyListener {
                         uiFrame.dispose();
                     }
                 } catch (Exception e1) {
-                    Utils.showErrorMsg(e1.getMessage(), "error", frame);
+                    DesignUtil.showErrorMsg(e1.getMessage(), "error", frame);
                     e1.printStackTrace();
                 }
             }
@@ -244,7 +244,7 @@ public class LoginUI implements KeyListener {
                         dispose();
                     }
                 } catch (Exception e) {
-                    Utils.showErrorMsg(e.getMessage(), "Error", frame);
+                    DesignUtil.showErrorMsg(e.getMessage(), "Error", frame);
                     e.printStackTrace();
                 }
             }

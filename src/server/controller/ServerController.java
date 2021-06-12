@@ -1,4 +1,4 @@
-package server.control;
+package server.controller;
 
 import client.controller.ClientController;
 import model.GroupChat;
@@ -6,7 +6,7 @@ import org.apache.commons.codec.binary.Hex;
 import model.OnlineUser;
 import model.User;
 import db.UsersContainer;
-import server.utils.Utils;
+import server.util.ServerUtil;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -78,7 +78,7 @@ public class ServerController {
             if (bufferDataMap.get(user.user.id).get(md5) == null) {
                 return;
             }
-            ByteBuffer msgData = ByteBuffer.wrap(Utils.PackageUtils.secondaryUnPack(bufferDataMap.get(user.user.id).get(md5), BANDWIDTH));
+            ByteBuffer msgData = ByteBuffer.wrap(ServerUtil.PackageUtils.secondaryUnPack(bufferDataMap.get(user.user.id).get(md5), BANDWIDTH));
             bufferDataMap.get(user.user.id).remove(md5);
 
             boolean isGroup = false;
@@ -87,7 +87,7 @@ public class ServerController {
 
 
                 if (msgData.get(0) == 3) {
-                    Map<String, String> resMap = Utils.PackageUtils.messageUnPack(msgData, user.publicKey);
+                    Map<String, String> resMap = ServerUtil.PackageUtils.messageUnPack(msgData, user.publicKey);
                     boolean isSend = false;
 
 
@@ -120,11 +120,11 @@ public class ServerController {
                     }
 
                 } else if (msgData.get(0) == 5) {
-                    ArrayList<String> FriendStrings = Utils.PackageUtils.friendListUnPack(msgData, user.publicKey);
+                    ArrayList<String> FriendStrings = ServerUtil.PackageUtils.friendListUnPack(msgData, user.publicKey);
                     if (msgData.get(1) == 1) {
                         for (String id : FriendStrings) {
                             if (UsersContainer.INSTANCE.users.get(id) == null) {
-                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
+                                secondaryPackAndSent(sc, ServerUtil.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
                             UsersContainer.INSTANCE.connectFriend(user.user.id, id);
@@ -140,7 +140,7 @@ public class ServerController {
                     } else if (msgData.get(1) == 2) {
                         for (String id : FriendStrings) {
                             if (UsersContainer.INSTANCE.users.get(id) == null) {
-                                secondaryPackAndSent(sc, Utils.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
+                                secondaryPackAndSent(sc, ServerUtil.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
                             UsersContainer.INSTANCE.deleteFriend(user.user.id, id);
@@ -158,7 +158,7 @@ public class ServerController {
                 }
 
                 if (msgData.get(0) == 6) {
-                    Map<String, Object> resMap = Utils.PackageUtils.fileUnPack(msgData, user.publicKey);
+                    Map<String, Object> resMap = ServerUtil.PackageUtils.fileUnPack(msgData, user.publicKey);
                     System.out.println("receive file");
                     System.out.println("To：" + resMap.get("id"));
                     System.out.println("name：" + resMap.get("name"));
@@ -167,7 +167,7 @@ public class ServerController {
                     for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
                         if (id.equals(resMap.get("id")) && onlineUserList.get(resMap.get("id")) != null) {
 
-                            byte[] data = Utils.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
+                            byte[] data = ServerUtil.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
                             new Thread(
                                     () -> {
                                         try {
@@ -187,7 +187,7 @@ public class ServerController {
         }
 
         public void enQueue(byte[] data) {
-            String md5 = Hex.encodeHexString(Utils.Convertion.BytesCapture(data, 0, 16));
+            String md5 = Hex.encodeHexString(ServerUtil.Convertion.BytesCapture(data, 0, 16));
             ArrayList<byte[]> queue = bufferDataMap.get(this.user.user.id).computeIfAbsent(md5, k -> new ArrayList<>());
             queue.add(data);
         }
@@ -195,7 +195,7 @@ public class ServerController {
         @Override
         public void completed(Integer result, Object attachment) {
             msgData.flip();
-            Map<String, String> dataMap = Utils.PackageUtils.readMD5andState(msgData);
+            Map<String, String> dataMap = ServerUtil.PackageUtils.readMD5andState(msgData);
             System.out.println(bufferDataMap.get(this.user.user.id).get(dataMap.get("MD5")));
 
             if ("1".equals(dataMap.get("info"))) {
@@ -219,7 +219,7 @@ public class ServerController {
 
     public static void secondaryPackAndSent(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
         ArrayList<byte[]> dataSeriesArrayList;
-        dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
+        dataSeriesArrayList = ServerUtil.PackageUtils.SecondaryPack(data, blockSize);
 
         assert dataSeriesArrayList != null;
         for (byte[] datas : dataSeriesArrayList) {
@@ -228,7 +228,7 @@ public class ServerController {
     }
 
     public void secondaryPackAndSentWithLimit(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
-        ArrayList<byte[]> dataSeriesArrayList = Utils.PackageUtils.SecondaryPack(data, blockSize);
+        ArrayList<byte[]> dataSeriesArrayList = ServerUtil.PackageUtils.SecondaryPack(data, blockSize);
 
         assert dataSeriesArrayList != null;
         for (byte[] datas : dataSeriesArrayList) {
@@ -247,7 +247,7 @@ public class ServerController {
                 res = true;
             } else {
                 try {
-                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -256,7 +256,7 @@ public class ServerController {
             for (String id : this.onlineUserList.keySet()) {
                 OnlineUser user = this.onlineUserList.get(id);
                 try {
-                    secondaryPackAndSent(user.sc, Utils.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -276,12 +276,12 @@ public class ServerController {
                 onLine[i] = onlineUserList.get(friendList.get(i).id) != null;
 
             }
-            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 1,
+            secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.friendListPack((byte) 1,
                     friendList, onLine,
                     user.privateKey), BANDWIDTH);
             friendList = UsersContainer.INSTANCE.searchApplyFriendAsUser(user.user.id);
             onLine = new boolean[friendList.size()];
-            secondaryPackAndSent(user.sc, Utils.PackageUtils.friendListPack((byte) 2,
+            secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.friendListPack((byte) 2,
                     friendList, onLine,
                     user.privateKey), BANDWIDTH);
         } catch (InterruptedException | ExecutionException e) {
@@ -321,12 +321,12 @@ public class ServerController {
 
                             signInMsg.flip();
                             if (signInMsg.get(0) == 1) {
-                                Map<String, String> infoMap = Utils.PackageUtils.loginUnPack(signInMsg);
+                                Map<String, String> infoMap = ServerUtil.PackageUtils.loginUnPack(signInMsg);
                                 User targetUser = UsersContainer.INSTANCE.users.get(infoMap.get("id"));
 
                                 if (targetUser == null) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 1, "id doesn't exist")))
+                                        sc.write(ByteBuffer.wrap(ServerUtil.PackageUtils.errorPack((byte) 1, "id doesn't exist")))
                                                 .get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
@@ -340,10 +340,10 @@ public class ServerController {
                                     }
                                     return;
 
-                                } else if (!Utils.LoginUtils.verifyPassword(infoMap.get("password"),
+                                } else if (!ServerUtil.LoginUtils.verifyPassword(infoMap.get("password"),
                                         targetUser.passwordMd5)) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 2, "password error!"))).get();
+                                        sc.write(ByteBuffer.wrap(ServerUtil.PackageUtils.errorPack((byte) 2, "password error!"))).get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
                                     }
@@ -357,7 +357,7 @@ public class ServerController {
                                     return;
                                 } else if (onlineUserList.get(infoMap.get("id")) != null) {
                                     try {
-                                        sc.write(ByteBuffer.wrap(Utils.PackageUtils.errorPack((byte) 3, "Your account has been logged in elsewhere!"))).get();
+                                        sc.write(ByteBuffer.wrap(ServerUtil.PackageUtils.errorPack((byte) 3, "Your account has been logged in elsewhere!"))).get();
                                     } catch (InterruptedException | ExecutionException e1) {
                                         e1.printStackTrace();
                                     }
@@ -372,15 +372,15 @@ public class ServerController {
                                     return;
                                 }
 
-                                Map<String, String> keyPair1 = Utils.RSAUtils.createKeys(1024);  // For client
-                                Map<String, String> keyPair2 = Utils.RSAUtils.createKeys(1024);  // For server
+                                Map<String, String> keyPair1 = ServerUtil.RSAUtils.createKeys(1024);  // For client
+                                Map<String, String> keyPair2 = ServerUtil.RSAUtils.createKeys(1024);  // For server
                                 OnlineUser targetOnlineUser = new OnlineUser(sc, keyPair2.get("publicKey"),
                                         keyPair1.get("privateKey"), targetUser);
                                 channel.put(infoMap.get("id"), targetOnlineUser);
                                 bufferDataMap.put(infoMap.get("id"), new HashMap<>());
 
                                 try {
-                                    sc.write(ByteBuffer.wrap(Utils.PackageUtils.loginSuccessPack(keyPair1.get("publicKey"),
+                                    sc.write(ByteBuffer.wrap(ServerUtil.PackageUtils.loginSuccessPack(keyPair1.get("publicKey"),
                                             keyPair2.get("privateKey")))).get();
                                     updateFriendList(targetOnlineUser);
                                 } catch (InterruptedException | ExecutionException e) {

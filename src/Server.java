@@ -1,4 +1,4 @@
-import server.control.ServerController;
+import server.controller.ServerController;
 import java.io.IOException;
 
 public class Server {

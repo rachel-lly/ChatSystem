@@ -1,8 +1,10 @@
 package UI.chat;
 
-import UI.utils.Utils;
+import UI.util.DesignUtil;
 import client.controller.UserController;
 import client.controller.FileFolder;
+import client.util.ClientUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -78,7 +80,7 @@ public class LeftBubble extends JPanel {
     public static LeftBubble createImage(String base64) {
         LeftBubble msgPanel = new LeftBubble();
         ImageIcon image;
-        image = client.utils.Utils.Base64Utils.base642Image(base64);
+        image = ClientUtil.Base64Utils.base642Image(base64);
 
         if (image == null) {
             return null;
@@ -119,7 +121,7 @@ public class LeftBubble extends JPanel {
         ImageIcon image;
         image = new ImageIcon(UserController.class.getResource(msgPanel.fileIconURL));
 
-        JButton text = Utils.createButton(name);
+        JButton text = DesignUtil.createButton(name);
         text.setBorderPainted(false);
         text.setBorder(null);
         text.setIcon(image);

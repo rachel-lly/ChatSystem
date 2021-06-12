@@ -1,7 +1,8 @@
 package client.controller;
 
+import client.util.ClientUtil;
 import model.Friend;
-import UI.utils.Utils;
+import UI.util.DesignUtil;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import db.UsersContainer;
@@ -52,7 +53,7 @@ public class ClientController {
         for(int i=0;i<groupChats.size();i++){
            if(groupChats.get(i).groupName.equals(groupName)){
                String id = groupChats.get(i).groupId;
-               byte[] msgData = client.utils.Utils.PackageUtils.messageGroupPack(id, (byte) type, msg, privateKey);
+               byte[] msgData = ClientUtil.PackageUtils.messageGroupPack(id, (byte) type, msg, privateKey);
                try {
                    secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
                } catch (InterruptedException | ExecutionException e) {
@@ -72,7 +73,7 @@ public class ClientController {
         }
 
 
-        byte[] msgData = client.utils.Utils.PackageUtils.messagePack(id, (byte) type, msg, privateKey);
+        byte[] msgData = ClientUtil.PackageUtils.messagePack(id, (byte) type, msg, privateKey);
 
         try {
             secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
@@ -104,7 +105,7 @@ public class ClientController {
         if (!this.clientChannel.isOpen()) {
             throw new MsgException(1, "Unconnected to server");
         }
-        byte[] friendsData = client.utils.Utils.PackageUtils.friendListPack((byte) 1, friends, privateKey);
+        byte[] friendsData = ClientUtil.PackageUtils.friendListPack((byte) 1, friends, privateKey);
 
         try {
             secondaryPackAndSent(this.clientChannel, friendsData, BANDWIDTH_DEFAULT);
@@ -136,7 +137,7 @@ public class ClientController {
         if (!this.clientChannel.isOpen()) {
             throw new MsgException(1, "Unconnected to server");
         }
-        byte[] friendsData =client.utils.Utils.PackageUtils.friendListPack((byte) 2, friends, privateKey);
+        byte[] friendsData = ClientUtil.PackageUtils.friendListPack((byte) 2, friends, privateKey);
 
         try {
             secondaryPackAndSent(this.clientChannel, friendsData, BANDWIDTH_DEFAULT);
@@ -149,7 +150,7 @@ public class ClientController {
         if (!this.clientChannel.isOpen()) {
             throw new MsgException(1, "Unconnected to server");
         }
-        byte[] msgData = client.utils.Utils.PackageUtils.filePack(id, name, file, privateKey);
+        byte[] msgData = ClientUtil.PackageUtils.filePack(id, name, file, privateKey);
 
         try {
             secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);
@@ -167,17 +168,17 @@ public class ClientController {
         this.clientChannel = AsynchronousSocketChannel.open(channelGroup);
         this.clientChannel.connect(new InetSocketAddress(this.address, this.port)).get();
         this.clientChannel.write(ByteBuffer.wrap(
-                client.utils.Utils.PackageUtils.loginPack(id, password)));
+                ClientUtil.PackageUtils.loginPack(id, password)));
         this.clientChannel.read(signInMsg).get();
 
         if (signInMsg.get(0) == 1) {
-            Map<String, String> keyPair = client.utils.Utils.PackageUtils.loginSucessUnPack(signInMsg);
+            Map<String, String> keyPair = ClientUtil.PackageUtils.loginSucessUnPack(signInMsg);
             publicKey = keyPair.get("publicKey");
             privateKey = keyPair.get("privateKey");
             LoopingMessageHandler handler = new LoopingMessageHandler(this.clientChannel);
             this.clientChannel.read(handler.msgData, null, handler);
         } else if (signInMsg.get(0) == 4) {
-            Map<String, String> keyPair = client.utils.Utils.PackageUtils.errorUnPack(signInMsg);
+            Map<String, String> keyPair = ClientUtil.PackageUtils.errorUnPack(signInMsg);
             String errorType = keyPair.get("subStatus");
             String errorMsg = keyPair.get("message");
 
@@ -195,7 +196,7 @@ public class ClientController {
     }
 
     public void enQueue(byte[] data) {
-        String md5 = Hex.encodeHexString(client.utils.Utils.Convertion.BytesCapture(data, 0, 16));
+        String md5 = Hex.encodeHexString(ClientUtil.Convertion.BytesCapture(data, 0, 16));
         ArrayList<byte[]> queue = this.packageBuffer.computeIfAbsent(md5, k -> new ArrayList<>());
 
         System.out.println(Hex.encodeHexString(data));
@@ -206,20 +207,20 @@ public class ClientController {
         if (this.packageBuffer.get(md5) == null) {
             return;
         }
-        ByteBuffer msgData = ByteBuffer.wrap(client.utils.Utils.PackageUtils.SecondaryUnPack(this.packageBuffer.get(md5), BANDWIDTH_DEFAULT));
+        ByteBuffer msgData = ByteBuffer.wrap(ClientUtil.PackageUtils.SecondaryUnPack(this.packageBuffer.get(md5), BANDWIDTH_DEFAULT));
         this.packageBuffer.remove(md5);
 
         try {
             if (msgData.get(0) == 3) {
-                Map<String, String> resMap = client.utils.Utils.PackageUtils.messageUnPack(msgData, publicKey);
+                Map<String, String> resMap = ClientUtil.PackageUtils.messageUnPack(msgData, publicKey);
                 System.out.println("data type：" + resMap.get("msgType"));
                 callback.receivedMsg(resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
             } else if (msgData.get(0) == 4) {
                 System.out.println("receive error");
-                Map<String, String> resMap =client.utils.Utils.PackageUtils.errorUnPack(msgData);
+                Map<String, String> resMap = ClientUtil.PackageUtils.errorUnPack(msgData);
                 callback.errorOccupy(resMap.get("message"));
             } else if (msgData.get(0) == 5) {
-                ArrayList<Friend> resArray =client.utils.Utils.PackageUtils.friendListUnPack(msgData, publicKey);
+                ArrayList<Friend> resArray = ClientUtil.PackageUtils.friendListUnPack(msgData, publicKey);
                 
                 if (msgData.get(1) == 1) {
                     friendList = resArray;
@@ -231,9 +232,9 @@ public class ClientController {
                 
             } else if (msgData.get(0) == 6) {
                 Map<String, Object> resMap;
-                resMap = client.utils.Utils.PackageUtils.fileUnPack(msgData, publicKey);
+                resMap = ClientUtil.PackageUtils.fileUnPack(msgData, publicKey);
                 File file = new File(FileFolder.getDefaultDirectory() + "/" + resMap.get("id") + "/files/" + resMap.get("name"));
-                client.utils.Utils.FileUtils.saveFile(file, (byte[]) resMap.get("file"));
+                ClientUtil.FileUtils.saveFile(file, (byte[]) resMap.get("file"));
                 callback.receivedMsg((String) resMap.get("id"), (String) resMap.get("name"), 3);
                 System.out.println("Documents received");
                 System.out.println("From：" + resMap.get("id"));
@@ -246,7 +247,7 @@ public class ClientController {
     }
 
     public void secondaryPackAndSent(AsynchronousSocketChannel sc, byte[] data, int blockSize) throws InterruptedException, ExecutionException {
-        ArrayList<byte[]> dataSeriesArrayList =client.utils.Utils.PackageUtils.SecondaryPack(data, blockSize);
+        ArrayList<byte[]> dataSeriesArrayList = ClientUtil.PackageUtils.SecondaryPack(data, blockSize);
 
         assert dataSeriesArrayList != null;
         for (byte[] datas : dataSeriesArrayList) {
@@ -266,7 +267,7 @@ public class ClientController {
         @Override
         public void completed(Integer result, Object attachment) {
             msgData.flip();
-            Map<String, String> dataMap = client.utils.Utils.PackageUtils.readMD5andState(msgData);
+            Map<String, String> dataMap = ClientUtil.PackageUtils.readMD5andState(msgData);
 
             if ("1".equals(dataMap.get("info"))) {
                 enQueue(msgData.array().clone());
@@ -282,7 +283,7 @@ public class ClientController {
 
         @Override
         public void failed(Throwable ex, Object attachment) {
-            Utils.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.friendUI.frame);
+            DesignUtil.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.friendUI.frame);
             callback.exit();
             ex.printStackTrace();
         }

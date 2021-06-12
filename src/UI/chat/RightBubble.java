@@ -1,7 +1,7 @@
 package UI.chat;
 
 import client.controller.UserController;
-import client.utils.Utils;
+import client.util.ClientUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -104,7 +104,7 @@ public class RightBubble extends JPanel {
     public static RightBubble createImage(String base64) {
         RightBubble msgPanel = new RightBubble();
         ImageIcon image;
-        image = Utils.Base64Utils.base642Image(base64);
+        image = ClientUtil.Base64Utils.base642Image(base64);
 
         if (image != null) {
             if (image.getIconHeight() > image.getIconWidth()) {

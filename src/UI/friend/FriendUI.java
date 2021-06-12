@@ -1,7 +1,7 @@
 package UI.friend;
 
 import UI.login.LoginUI;
-import UI.utils.Utils;
+import UI.util.DesignUtil;
 import client.controller.UserController;
 import model.Friend;
 import model.GroupChat;
@@ -149,7 +149,7 @@ public class FriendUI {
                                 JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                             callback.deleteFriends(tempArrayList);
 
-                            Utils.showInformationMsg("删除好友成功","提示",null);
+                            DesignUtil.showInformationMsg("删除好友成功","提示",null);
                         }
                     } else {
                         callback.openChatPanel(friend);
@@ -178,12 +178,12 @@ public class FriendUI {
         jp.setLayout(new GridLayout(1, 0));
         jp.setPreferredSize(new Dimension(0, 30));
 
-        addFriendsButton = Utils.createButton("添加好友");
+        addFriendsButton = DesignUtil.createButton("添加好友");
         addFriendsButton.addActionListener(e -> addFriendInput());
 
         jp.add(addFriendsButton);
 
-        deleteFriendButton = Utils.createButton("删除好友");
+        deleteFriendButton = DesignUtil.createButton("删除好友");
         deleteFriendButton.addActionListener(new ActionListener() {
 
             public Color switchColor = new Color(0.5f, 0.0f, 0.0f);
@@ -192,7 +192,7 @@ public class FriendUI {
             public void actionPerformed(ActionEvent e) {
 
                 if(isFirst){
-                    Utils.showWarningMsg("点击想删除的好友\n重复点击“删除”取消删除界面", "提示",null);
+                    DesignUtil.showWarningMsg("点击想删除的好友\n重复点击“删除”取消删除界面", "提示",null);
                     isFirst = false;
                 }
 
@@ -204,7 +204,7 @@ public class FriendUI {
         });
         jp.add(deleteFriendButton);
 
-        addGroupChatButton = Utils.createButton("新建群聊");
+        addGroupChatButton = DesignUtil.createButton("新建群聊");
         addGroupChatButton.addActionListener( e -> addGroupChat());
         jp.add(addGroupChatButton);
 
@@ -217,7 +217,7 @@ public class FriendUI {
         dialog.setBounds(400, 300, 300, 100);
         dialog.setLayout(new BorderLayout());
 
-        JButton confirm = Utils.createButton("创建");
+        JButton confirm = DesignUtil.createButton("创建");
 
         JTextField idFieldArea = new JTextField();
 
@@ -228,7 +228,7 @@ public class FriendUI {
 
 
             callback.addGroupChat(idFieldArea.getText());
-            Utils.showInformationMsg("创建群聊成功","提示",null);
+            DesignUtil.showInformationMsg("创建群聊成功","提示",null);
             updateInformation();
             dialog.setVisible(false);
 
@@ -258,7 +258,7 @@ public class FriendUI {
         dialog.setLayout(new BorderLayout());
 
 
-        JButton confirm = Utils.createButton("确定");
+        JButton confirm = DesignUtil.createButton("确定");
 
         JTextField idFieldArea = new JTextField();
 

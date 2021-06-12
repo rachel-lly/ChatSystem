@@ -1,11 +1,12 @@
 package UI.chat;
 
 
+import UI.util.DesignUtil;
 import model.Friend;
 import client.controller.UserController;
 import model.ChatRecord;
 import client.controller.ChatRecordManager;
-import client.utils.Utils;
+import client.util.ClientUtil;
 import model.GroupChat;
 import db.UsersContainer;
 import javax.swing.*;
@@ -85,7 +86,7 @@ public class ChatUI {
             e.printStackTrace();
         }
         frame = new JFrame();
-        frame.setBackground(UI.utils.Utils.Theme.ThemeColor1);
+        frame.setBackground(DesignUtil.Theme.ThemeColor);
 
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension d = t.getScreenSize();
@@ -111,7 +112,7 @@ public class ChatUI {
         this.groupName = name;
 
         frame = new JFrame();
-        frame.setBackground(UI.utils.Utils.Theme.ThemeColor1);
+        frame.setBackground(DesignUtil.Theme.ThemeColor);
 
         Toolkit t = Toolkit.getDefaultToolkit();
         Dimension d = t.getScreenSize();
@@ -239,7 +240,7 @@ public class ChatUI {
 
                     try {
                         if (file != null) {
-                            sendMsg(Utils.Base64Utils.readBase64(file), 2);
+                            sendMsg(ClientUtil.Base64Utils.readBase64(file), 2);
                         }
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -270,7 +271,7 @@ public class ChatUI {
                         new Thread(() -> {
                             byte[] data;
                             try {
-                                data = Utils.FileUtils.readFile(file);
+                                data = ClientUtil.FileUtils.readFile(file);
 
                                 callback.sendFile(friend.id, file.getName(), data);
                             } catch (Exception e12) {
