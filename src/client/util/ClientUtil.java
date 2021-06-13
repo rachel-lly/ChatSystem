@@ -518,17 +518,7 @@ public class ClientUtil {
             return Base64.encodeBase64String(fileByte);
         }
 
-        public static void outPutFile(String base64, File file) {
-            byte[] btDataFile = Base64.decodeBase64(base64);
 
-            try {
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(btDataFile);
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
     }
 }
