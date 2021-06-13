@@ -36,7 +36,7 @@ public class ClientController {
     public String address;
     public String publicKey = null, privateKey = null;
 
-    public ExecutorService executor;
+    public ExecutorService threadPool;
     public AsynchronousChannelGroup channelGroup;
     public AsynchronousSocketChannel clientChannel = null;
     public UserController userController;
@@ -95,8 +95,8 @@ public class ClientController {
         this.userController = userController;
         this.address = address;
         this.port = port;
-        this.executor = Executors.newFixedThreadPool(50);
-        this.channelGroup = AsynchronousChannelGroup.withThreadPool(executor);
+        this.threadPool = Executors.newFixedThreadPool(50);
+        this.channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool);
     }
 
 

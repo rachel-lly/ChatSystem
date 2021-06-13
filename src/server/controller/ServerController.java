@@ -82,9 +82,8 @@ public class ServerController {
 
 
                 if (msgData.get(0) == 3) {
-                    Map<String, String> resMap = ServerUtil.PackageUtils.messageUnPack(msgData, user.publicKey);
-                    boolean isSend = false;
 
+                    Map<String, String> resMap = ServerUtil.PackageUtils.messageUnPack(msgData, user.publicKey);
 
                     ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
 
