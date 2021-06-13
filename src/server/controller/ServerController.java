@@ -231,26 +231,25 @@ public class ServerController {
     }
 
 
-    public boolean sendMsg(String srcId, String dstId, String msg, int type) {
-        boolean res;
-        res = false;
+    public boolean sendMsg(String id, String toId, String msg, int type) {
+        boolean res = false;
 
-        if (dstId != null) {
-            OnlineUser user = this.onlineUserList.get(dstId);
+        if (toId != null) {
+            OnlineUser user = this.onlineUserList.get(toId);
             if (user == null) {
                 res = true;
             } else {
                 try {
-                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(id, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            for (String id : this.onlineUserList.keySet()) {
-                OnlineUser user = this.onlineUserList.get(id);
+            for (String onLineid : this.onlineUserList.keySet()) {
+                OnlineUser user = this.onlineUserList.get(onLineid);
                 try {
-                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(id, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
