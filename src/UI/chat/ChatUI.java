@@ -5,7 +5,7 @@ import UI.util.DesignUtil;
 import model.Friend;
 import client.controller.UserController;
 import model.ChatRecord;
-import client.controller.ChatRecordManager;
+import util.ChatRecordManager;
 import client.util.ClientUtil;
 import model.GroupChat;
 import db.UsersContainer;

@@ -1,4 +1,4 @@
-package client.controller;
+package util;
 
 import model.ChatRecord;
 import java.io.*;

@@ -6,6 +6,8 @@ import UI.util.DesignUtil;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import db.UsersContainer;
+import util.FileFolder;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;

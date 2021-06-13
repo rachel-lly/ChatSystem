@@ -2,7 +2,7 @@ package UI.chat;
 
 import UI.util.DesignUtil;
 import client.controller.UserController;
-import client.controller.FileFolder;
+import util.FileFolder;
 import client.util.ClientUtil;
 
 import javax.swing.*;
