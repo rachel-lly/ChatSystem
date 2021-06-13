@@ -171,7 +171,7 @@ public class ServerController {
                             new Thread(
                                     () -> {
                                         try {
-                                            secondaryPackAndSentWithLimit(onlineUserList.get(id).sc, data, BANDWIDTH);
+                                            secondaryPackAndSentWithLimit(onlineUserList.get(id).socketChannel, data, BANDWIDTH);
                                         } catch (InterruptedException | ExecutionException e) {
                                             e.printStackTrace();
                                         }
@@ -247,7 +247,7 @@ public class ServerController {
                 res = true;
             } else {
                 try {
-                    secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -256,7 +256,7 @@ public class ServerController {
             for (String id : this.onlineUserList.keySet()) {
                 OnlineUser user = this.onlineUserList.get(id);
                 try {
-                    secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
+                    secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.messagePack(srcId, (byte) type, msg, user.privateKey), BANDWIDTH);
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -276,12 +276,12 @@ public class ServerController {
                 onLine[i] = onlineUserList.get(friendList.get(i).id) != null;
 
             }
-            secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.friendListPack((byte) 1,
+            secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.friendListPack((byte) 1,
                     friendList, onLine,
                     user.privateKey), BANDWIDTH);
             friendList = UsersContainer.INSTANCE.searchApplyFriendAsUser(user.user.id);
             onLine = new boolean[friendList.size()];
-            secondaryPackAndSent(user.sc, ServerUtil.PackageUtils.friendListPack((byte) 2,
+            secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.friendListPack((byte) 2,
                     friendList, onLine,
                     user.privateKey), BANDWIDTH);
         } catch (InterruptedException | ExecutionException e) {

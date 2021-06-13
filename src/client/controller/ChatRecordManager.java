@@ -19,7 +19,7 @@ public class ChatRecordManager {
         outputStream.writeInt(record.size());
 
         for (ChatRecord chatRecord : record) {
-            chatRecord.toFile(outputStream);
+            chatRecord.writeToFile(outputStream);
         }
 
         outputStream.close();
@@ -42,7 +42,7 @@ public class ChatRecordManager {
             int size = inputStream.readInt();
             System.out.println(size);
             for (int i = 0; i < size; ++i) {
-                resArrayList.add(ChatRecord.toData(inputStream));
+                resArrayList.add(ChatRecord.writeToData(inputStream));
             }
             inputStream.close();
 

@@ -22,13 +22,13 @@ public class ChatRecord {
         this("", "", "", (byte) 0);
     }
 
-    public void toFile(DataOutputStream stream) throws IOException {
+    public void writeToFile(DataOutputStream stream) throws IOException {
         stream.writeByte(this.state);
         stream.writeInt(this.msg.getBytes(StandardCharsets.UTF_8).length);
         stream.write(this.msg.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static ChatRecord toData(DataInputStream stream) throws IOException {
+    public static ChatRecord writeToData(DataInputStream stream) throws IOException {
         ChatRecord resChatRecord;
         resChatRecord = new ChatRecord();
         resChatRecord.state = stream.readByte();
