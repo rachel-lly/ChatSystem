@@ -160,55 +160,55 @@ public class LoginUI implements KeyListener {
     }
 
     static class JTextFieldHandler implements FocusListener {
-        private final String str;
-        private final JTextField text1;
+        private final String s;
+        private final JTextField text;
 
-        public JTextFieldHandler(JTextField text1, String str) {
-            this.text1 = text1;
-            this.str = str;
+        public JTextFieldHandler(JTextField text, String s) {
+            this.text = text;
+            this.s = s;
         }
 
         @Override
         public void focusGained(FocusEvent e) {
-            if (text1.getText().equals(str)) {
-                text1.setText("");
-                text1.setForeground(Color.BLACK);
+            if (text.getText().equals(s)) {
+                text.setText("");
+                text.setForeground(Color.BLACK);
             }
         }
 
         @Override
         public void focusLost(FocusEvent e) {
-            if ("".equals(text1.getText())) {
-                text1.setForeground(Color.gray);
-                text1.setText(str);
+            if ("".equals(text.getText())) {
+                text.setForeground(Color.gray);
+                text.setText(s);
             }
         }
     }
 
     static class JPasswordFieldHandler implements FocusListener {
-        private final String str;
-        private final JPasswordField text1;
+        private final String s;
+        private final JPasswordField text;
 
-        public JPasswordFieldHandler(JPasswordField text1, String str) {
-            this.text1 = text1;
-            this.str = str;
+        public JPasswordFieldHandler(JPasswordField text, String s) {
+            this.text = text;
+            this.s = s;
         }
 
         @Override
         public void focusGained(FocusEvent e) {
-            if (String.valueOf(text1.getPassword()).equals(str)) {
-                text1.setText("");
-                text1.setEchoChar('*');
-                text1.setForeground(Color.BLACK);
+            if (String.valueOf(text.getPassword()).equals(s)) {
+                text.setText("");
+                text.setEchoChar('*');
+                text.setForeground(Color.BLACK);
             }
         }
 
         @Override
         public void focusLost(FocusEvent e) {
-            if ("".equals(String.valueOf(text1.getPassword()))) {
-                text1.setEchoChar((char) (0));
-                text1.setForeground(Color.gray);
-                text1.setText(str);
+            if ("".equals(String.valueOf(text.getPassword()))) {
+                text.setEchoChar((char) (0));
+                text.setForeground(Color.gray);
+                text.setText(s);
             }
         }
     }
@@ -227,16 +227,16 @@ public class LoginUI implements KeyListener {
         this.frame.dispose();
     }
 
-    int preKey = 0;
+    int keyCode = 0;
 
     @Override
     public void keyPressed(KeyEvent event) {
-        preKey = event.getKeyCode();
+        keyCode = event.getKeyCode();
     }
 
     @Override
     public void keyReleased(KeyEvent event) {
-        if ("ENTER".equals(KeyEvent.getKeyText(event.getKeyCode())) && "ENTER".equals(KeyEvent.getKeyText(preKey)) || event.getKeyCode() == 10 && preKey == 10) {
+        if ("ENTER".equals(KeyEvent.getKeyText(event.getKeyCode())) && "ENTER".equals(KeyEvent.getKeyText(keyCode)) || event.getKeyCode() == 10 && keyCode == 10) {
             if (this.checkInput()) {
                 try {
                     if (this.userController.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
