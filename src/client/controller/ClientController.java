@@ -36,10 +36,10 @@ public class ClientController {
     public String address;
     public String publicKey = null, privateKey = null;
 
-    public ExecutorService executor = null;
-    public AsynchronousChannelGroup channelGroup = null;
+    public ExecutorService executor;
+    public AsynchronousChannelGroup channelGroup;
     public AsynchronousSocketChannel clientChannel = null;
-    public UserController callback;
+    public UserController userController;
     public Map<String, ArrayList<byte[]>> packageBuffer;
 
     public ArrayList<Friend> friendList = new ArrayList<>();
@@ -86,22 +86,19 @@ public class ClientController {
 
 
 
-    public ClientController(UserController callback) throws IOException {
-        this(callback, ADDRESS_DEFAULT, PORT_DEFAULT);
+    public ClientController(UserController userController) throws IOException {
+        this(userController, ADDRESS_DEFAULT, PORT_DEFAULT);
     }
 
-    public ClientController(UserController callback, String address, int port) throws IOException {
+    public ClientController(UserController userController, String address, int port) throws IOException {
         this.packageBuffer = new HashMap<>();
-        this.callback = callback;
+        this.userController = userController;
         this.address = address;
         this.port = port;
-        this.init();
-    }
-
-    public void init() throws IOException {
-        this.executor = Executors.newFixedThreadPool(80);
+        this.executor = Executors.newFixedThreadPool(50);
         this.channelGroup = AsynchronousChannelGroup.withThreadPool(executor);
     }
+
 
     public void addFriends(ArrayList<Friend> friends) throws MsgException {
         if (!this.clientChannel.isOpen()) {
@@ -209,17 +206,17 @@ public class ClientController {
             if (msgData.get(0) == 3) {
                 Map<String, String> resMap = ClientUtil.PackageUtils.messageUnPack(msgData, publicKey);
                 System.out.println("data type：" + resMap.get("msgType"));
-                callback.receivedMsg(resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
+                userController.receivedMsg(resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
             } else if (msgData.get(0) == 4) {
                 System.out.println("receive error");
                 Map<String, String> resMap = ClientUtil.PackageUtils.errorUnPack(msgData);
-                callback.errorOccupy(resMap.get("message"));
+                userController.errorOccupy(resMap.get("message"));
             } else if (msgData.get(0) == 5) {
                 ArrayList<Friend> resArray = ClientUtil.PackageUtils.friendListUnPack(msgData, publicKey);
                 
                 if (msgData.get(1) == 1) {
                     friendList = resArray;
-                    callback.updateFriendList(resArray);
+                    userController.updateFriendList(resArray);
                     
                 }
                 
@@ -228,7 +225,7 @@ public class ClientController {
                 resMap = ClientUtil.PackageUtils.fileUnPack(msgData, publicKey);
                 File file = new File(FileFolder.getDefaultDirectory() + "/" + resMap.get("id") + "/files/" + resMap.get("name"));
                 ClientUtil.FileUtils.saveFile(file, (byte[]) resMap.get("file"));
-                callback.receivedMsg((String) resMap.get("id"), (String) resMap.get("name"), 3);
+                userController.receivedMsg((String) resMap.get("id"), (String) resMap.get("name"), 3);
                 System.out.println("Documents received");
                 System.out.println("From：" + resMap.get("id"));
                 System.out.println("Name：" + resMap.get("name"));
@@ -276,8 +273,8 @@ public class ClientController {
 
         @Override
         public void failed(Throwable ex, Object attachment) {
-            DesignUtil.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.chatListUI.frame);
-            callback.exit();
+            DesignUtil.showErrorMsg("Disconnected from the Server!！", "ERROR", userController.chatListUI.frame);
+            userController.exit();
             ex.printStackTrace();
         }
     }

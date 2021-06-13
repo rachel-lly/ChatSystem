@@ -29,7 +29,7 @@ public class ServerController {
 
     public static final int BANDWIDTH = 1024 * 8;
     public HashMap<String, OnlineUser> onlineUserList = new HashMap<>();
-    public ExecutorService executor = null;
+    public ExecutorService threadPool = null;
     public AsynchronousChannelGroup channelGroup = null;
     public AsynchronousServerSocketChannel serverChannel = null;
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
@@ -41,22 +41,17 @@ public class ServerController {
 
     public ServerController(int port) throws IOException {
         this.port = port;
-        this.init();
-    }
-
-    public void init() throws IOException {
         this.onlineUserList = new HashMap<>();
-        this.executor = Executors.newFixedThreadPool(20);
-        this.channelGroup = AsynchronousChannelGroup.withThreadPool(executor);
+        this.threadPool = Executors.newFixedThreadPool(10);
+        this.channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool);
         this.serverChannel = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(this.port));
     }
 
     public void start() {
         this.serverChannel.accept(null, new LoginHandler(this.serverChannel, this.onlineUserList));
-
         try {
             System.out.println("Server started successfully!");
-            while (!executor.awaitTermination(3, TimeUnit.SECONDS)) {
+            while (!threadPool.awaitTermination(3, TimeUnit.SECONDS)) {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
