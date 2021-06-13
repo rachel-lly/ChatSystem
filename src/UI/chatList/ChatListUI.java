@@ -1,4 +1,4 @@
-package UI.friend;
+package UI.chatList;
 
 import UI.login.LoginUI;
 import UI.util.DesignUtil;
@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FriendUI {
+public class ChatListUI {
 
     public boolean isFirst = true;
 
@@ -25,7 +25,7 @@ public class FriendUI {
     public JFrame frame;
 
     public ArrayList<Friend> friendsList;
-    public ArrayList<Friend> applyFriendsList;
+
     public ArrayList<String> groupNameList = new ArrayList<>();
 
     public DefaultMutableTreeNode treeNode;
@@ -45,13 +45,12 @@ public class FriendUI {
 
 
 
-    public FriendUI(UserController callback) {
-        this(new ArrayList<>(), new ArrayList<>(),callback);
+    public ChatListUI(UserController callback) {
+        this(new ArrayList<>(),callback);
     }
 
-    public FriendUI(ArrayList<Friend> friendsList,
-                    ArrayList<Friend> applyFriendsList,
-                    UserController callback) {
+    public ChatListUI(ArrayList<Friend> friendsList,
+                      UserController callback) {
 
         ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
         for(int i=0;i<list.size();i++){
@@ -59,7 +58,7 @@ public class FriendUI {
         }
 
         this.friendsList = friendsList;
-        this.applyFriendsList = applyFriendsList;
+
         this.callback = callback;
         init();
         updateInformation();

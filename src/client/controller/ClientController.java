@@ -221,8 +221,6 @@ public class ClientController {
                     friendList = resArray;
                     callback.updateFriendList(resArray);
                     
-                } else if (msgData.get(1) == 2) {
-                    callback.updateApplyFriendList(resArray);
                 }
                 
             } else if (msgData.get(0) == 6) {
@@ -278,7 +276,7 @@ public class ClientController {
 
         @Override
         public void failed(Throwable ex, Object attachment) {
-            DesignUtil.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.friendUI.frame);
+            DesignUtil.showErrorMsg("Disconnected from the Server!！", "ERROR", callback.chatListUI.frame);
             callback.exit();
             ex.printStackTrace();
         }

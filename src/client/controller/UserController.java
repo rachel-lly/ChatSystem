@@ -3,7 +3,7 @@ package client.controller;
 import UI.login.LoginUI;
 import UI.chat.ChatUI;
 import model.Friend;
-import UI.friend.FriendUI;
+import UI.chatList.ChatListUI;
 import UI.util.DesignUtil;
 import model.GroupChat;
 import db.UsersContainer;
@@ -14,13 +14,13 @@ import java.util.HashMap;
 
 public class UserController {
 
-    public ArrayList<Friend> applyFriendList;
+
     public ArrayList<Friend> friendList;
 
 
     public ClientController client;
     public LoginUI loggingLoginUI;
-    public FriendUI friendUI;
+    public ChatListUI chatListUI;
 
     public HashMap<String, ChatUI> chattingPanel;
     public String id;
@@ -29,7 +29,7 @@ public class UserController {
     public boolean login(String id, String password) throws Exception {
         client.login(id, password);
         this.id = id;
-        this.friendUI.frame.setVisible(true);
+        this.chatListUI.frame.setVisible(true);
         return true;
     }
 
@@ -57,7 +57,7 @@ public class UserController {
 
 
     public void updateFriendList(ArrayList<Friend> friendList) {
-        this.friendUI.friendsList = friendList;
+        this.chatListUI.friendsList = friendList;
 
         for (Friend friend : friendList) {
             if (this.chattingPanel.get(friend.id) != null) {
@@ -65,14 +65,12 @@ public class UserController {
                 this.chattingPanel.get(friend.id).update();
             }
         }
-        this.friendUI.updateInformation();
+        this.chatListUI.updateInformation();
     }
 
 
 
-    public void updateApplyFriendList(ArrayList<Friend> applyFriendsList) {
-        this.friendUI.applyFriendsList = applyFriendsList;
-    }
+
 
     public boolean closeChatPanel(Friend friend) {
         boolean res = true;
@@ -109,7 +107,7 @@ public class UserController {
            if(!isGroup){
 
                Friend sender = new Friend(id, "anonymous");
-               for (Friend fri : this.friendUI.friendsList) {
+               for (Friend fri : this.chatListUI.friendsList) {
                    if (fri.id.equals(id)) {
                        sender.nickName = fri.nickName;
                        sender.state = 1;
@@ -185,13 +183,12 @@ public class UserController {
 
     public void init() throws IOException {
         this.friendList = new ArrayList<>();
-        this.applyFriendList = new ArrayList<>();
         this.client = new ClientController(this);
-        this.friendUI = new FriendUI(this.friendList, this.applyFriendList,this);
+        this.chatListUI = new ChatListUI(this.friendList,this);
         this.chattingPanel = new HashMap<>();
     }
 
     public void errorOccupy(final String msg) {
-        new Thread(() -> DesignUtil.showErrorMsg(msg, "error", friendUI.frame)).start();
+        new Thread(() -> DesignUtil.showErrorMsg(msg, "error", chatListUI.frame)).start();
     }
 }
