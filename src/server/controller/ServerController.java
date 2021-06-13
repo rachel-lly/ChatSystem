@@ -341,7 +341,7 @@ public class ServerController {
                                     return;
 
                                 } else if (!ServerUtil.LoginUtils.verifyPassword(infoMap.get("password"),
-                                        targetUser.passwordMd5)) {
+                                        targetUser.password)) {
                                     try {
                                         sc.write(ByteBuffer.wrap(ServerUtil.PackageUtils.errorPack((byte) 2, "password error!"))).get();
                                     } catch (InterruptedException | ExecutionException e1) {

@@ -3,12 +3,12 @@ package model;
 
 public class User {
     public String id;
-    public String passwordMd5;
+    public String password;
     public String nickName;
 
-    public User(String id, String passwordMd5, String nickName) {
+    public User(String id, String password, String nickName) {
         this.id = id;
-        this.passwordMd5 = passwordMd5;
+        this.password = password;
         this.nickName = nickName;
     }
 
