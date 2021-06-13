@@ -126,14 +126,7 @@ public class ClientController {
 
     }
 
-    public ArrayList<GroupChat> addGroupChat() throws MsgException {
-        if (!this.clientChannel.isOpen()) {
-            throw new MsgException(1, "Unconnected to server");
-        }
 
-        return UsersContainer.INSTANCE.getGroupNameList();
-
-    }
 
     public void deleteFriends(ArrayList<Friend> friends) throws MsgException {
         if (!this.clientChannel.isOpen()) {

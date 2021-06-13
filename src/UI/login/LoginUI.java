@@ -12,14 +12,14 @@ public class LoginUI implements KeyListener {
     private final JFrame frame;
     private JTextField idField;
     private JPasswordField passwordField;
-    private final UserController callback;
-    private boolean logined = false;
+    private final UserController userController;
+    private boolean login = false;
 
     public static String id;
 
     static String iconURL = "/UI/assets/chat_icon.png";
 
-    public LoginUI(UserController callback) {
+    public LoginUI(UserController userController) {
         frame = new JFrame("ChatSystem");
         frame.setBackground(DesignUtil.Theme.ThemeColor);
 
@@ -43,7 +43,7 @@ public class LoginUI implements KeyListener {
         frame.add(eastPanel, BorderLayout.EAST);
         frame.setVisible(true);
 
-        this.callback = callback;
+        this.userController = userController;
         this.frame.addWindowListener(new CloseWindow());
     }
 
@@ -146,8 +146,8 @@ public class LoginUI implements KeyListener {
         public void actionPerformed(ActionEvent e) {
             if (uiFrame.checkInput()) {
                 try {
-                    if (uiFrame.callback.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
-                        uiFrame.logined = true;
+                    if (uiFrame.userController.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
+                        uiFrame.login = true;
                         id = idField.getText();
                         uiFrame.dispose();
                     }
@@ -221,8 +221,8 @@ public class LoginUI implements KeyListener {
     }
 
     public void dispose() {
-        if (!logined) {
-            this.callback.exit();
+        if (!login) {
+            this.userController.exit();
         }
         this.frame.dispose();
     }
@@ -239,8 +239,8 @@ public class LoginUI implements KeyListener {
         if ("ENTER".equals(KeyEvent.getKeyText(event.getKeyCode())) && "ENTER".equals(KeyEvent.getKeyText(preKey)) || event.getKeyCode() == 10 && preKey == 10) {
             if (this.checkInput()) {
                 try {
-                    if (this.callback.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
-                        logined = true;
+                    if (this.userController.login(idField.getText(), String.valueOf(passwordField.getPassword()))) {
+                        login = true;
                         dispose();
                     }
                 } catch (Exception e) {

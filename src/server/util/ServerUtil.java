@@ -272,23 +272,6 @@ public class ServerUtil {
             return signInData;
         }
 
-        public static Map<String, String> loginSucessUnPack(ByteBuffer loginPackage) {
-            Map<String, String> resMap = new HashMap<>();
-            byte[] data = loginPackage.array(),
-                    publicKey = new byte[Convertion.bytes2Int(Convertion.BytesCapture(data, 1, 4))],
-                    privateKey = new byte[Convertion.bytes2Int(Convertion.BytesCapture(data, 5, 4))];
-
-            if (publicKey.length >= 0) {
-                System.arraycopy(data, 9, publicKey, 0, publicKey.length);
-            }
-            for (int i = 0; i < privateKey.length; ++i) {
-                privateKey[i] = data[9 + publicKey.length + i];
-            }
-            resMap.put("publicKey", new String(publicKey));
-            resMap.put("privateKey", new String(privateKey));
-
-            return resMap;
-        }
 
         public static Map<String, String> loginUnPack(ByteBuffer loginPackage) {
             Map<String, String> resMap = new HashMap<>();

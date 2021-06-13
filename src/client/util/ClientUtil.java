@@ -390,27 +390,6 @@ public class ClientUtil {
     public static class RSAUtils {
         public static final String RSA_ALGORITHM = "RSA";
 
-        public static Map<String, String> createKeys(int keySize) {
-            KeyPairGenerator kpg;
-            try {
-                kpg = getInstance(RSA_ALGORITHM);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalArgumentException("No such algorithm-->[" + RSA_ALGORITHM + "]");
-            }
-
-            kpg.initialize(keySize);
-            KeyPair keyPair = kpg.generateKeyPair();
-            Key publicKey = keyPair.getPublic();
-            String publicKeyStr = Base64.encodeBase64URLSafeString(publicKey.getEncoded());
-            Key privateKey = keyPair.getPrivate();
-            String privateKeyStr = Base64.encodeBase64URLSafeString(privateKey.getEncoded());
-
-            Map<String, String> keyPairMap = new HashMap<>();
-            keyPairMap.put("publicKey", publicKeyStr);
-            keyPairMap.put("privateKey", privateKeyStr);
-
-            return keyPairMap;
-        }
 
         public static RSAPublicKey getPublicKey(String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
             KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
