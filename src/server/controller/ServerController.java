@@ -28,10 +28,10 @@ public class ServerController {
     public int port;
 
     public static final int BANDWIDTH = 1024 * 8;
-    public HashMap<String, OnlineUser> onlineUserList = new HashMap<>();
-    public ExecutorService threadPool = null;
-    public AsynchronousChannelGroup channelGroup = null;
-    public AsynchronousServerSocketChannel serverChannel = null;
+    public HashMap<String, OnlineUser> onlineUserList;
+    public ExecutorService threadPool;
+    public AsynchronousChannelGroup channelGroup ;
+    public AsynchronousServerSocketChannel serverChannel;
     public Map<String, Map<String, ArrayList<byte[]>>> bufferDataMap = new HashMap<>();
 
 
@@ -42,7 +42,7 @@ public class ServerController {
     public ServerController(int port) throws IOException {
         this.port = port;
         this.onlineUserList = new HashMap<>();
-        this.threadPool = Executors.newFixedThreadPool(10);
+        this.threadPool = Executors.newFixedThreadPool(20);
         this.channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool);
         this.serverChannel = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(this.port));
     }

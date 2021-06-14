@@ -29,7 +29,7 @@ public class ClientController {
 
     public static int PORT_DEFAULT = 9023;
 
-    public static final int BANDWIDTH_DEFAULT = 1024 * 9;
+    public static final int BANDWIDTH_DEFAULT = 1024 * 8;
 
     public int port;
 
@@ -95,7 +95,7 @@ public class ClientController {
         this.userController = userController;
         this.address = address;
         this.port = port;
-        this.threadPool = Executors.newFixedThreadPool(50);
+        this.threadPool = Executors.newFixedThreadPool(80);
         this.channelGroup = AsynchronousChannelGroup.withThreadPool(threadPool);
     }
 
