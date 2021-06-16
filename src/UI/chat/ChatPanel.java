@@ -36,7 +36,7 @@ public class ChatPanel extends JPanel {
         } else if (type == 2) {
             msgPanel = LeftBubble.createImage(text);
         } else if (type == 3) {
-            msgPanel = LeftBubble.createFile(text, this.self.id);
+            msgPanel = LeftBubble.createFile(text, this.self.getId());
         }
         seGroup1.addComponent(msgPanel);
         seGroup2.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(msgPanel,

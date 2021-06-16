@@ -6,6 +6,10 @@ import client.controller.UserController;
 import model.Friend;
 import model.GroupChat;
 import db.UsersContainer;
+import model.OnlineUser;
+import model.User;
+import server.controller.ServerController;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -44,7 +48,6 @@ public class ChatListUI {
     public JTree tree;
 
 
-
     public ChatListUI(UserController callback) {
         this(new ArrayList<>(),callback);
     }
@@ -54,12 +57,13 @@ public class ChatListUI {
 
         ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
         for(int i=0;i<list.size();i++){
-            this.groupNameList.add(list.get(i).groupName);
+            this.groupNameList.add(list.get(i).getGroupName());
         }
 
         this.friendsList = friendsList;
 
         this.callback = callback;
+
         init();
         updateInformation();
     }
@@ -72,9 +76,9 @@ public class ChatListUI {
 
         for (Friend friend : this.friendsList) {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(friend);
-            if (friend.state == 1) {
+            if (friend.getState() == 1) {
                 this.onLine.add(node);
-            } else if (friend.state == 0) {
+            } else if (friend.getState() == 0) {
                 this.offLine.add(node);
             }
         }
@@ -82,7 +86,7 @@ public class ChatListUI {
         ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
         ArrayList<String> slist = new ArrayList<>();
         for(int i=0;i<list.size();i++){
-            slist.add(list.get(i).groupName);
+            slist.add(list.get(i).getGroupName());
         }
 
         groupNameList = slist;
@@ -96,7 +100,11 @@ public class ChatListUI {
     }
 
     public void init() {
+
+
+
         this.frame = new JFrame("聊天列表");
+
         this.frame.setSize(400, 450);
         this.frame.setIconImage(new ImageIcon(Objects.requireNonNull(LoginUI.class.getResource(iconURL))).getImage());
         this.frame.setLocationRelativeTo(null);
@@ -127,7 +135,7 @@ public class ChatListUI {
                 ArrayList<GroupChat> grouplist = UsersContainer.INSTANCE.getGroupNameList();
                 ArrayList<String> groupNameList = new ArrayList<>();
                 for(int i=0;i<grouplist.size();i++){
-                    groupNameList.add(grouplist.get(i).groupName);
+                    groupNameList.add(grouplist.get(i).getGroupName());
                 }
                 Object node =((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent()).getUserObject();
 
@@ -141,7 +149,7 @@ public class ChatListUI {
 
                     if (isDelete) {
                         ArrayList<Friend> tempArrayList = new ArrayList<>();
-                        tempArrayList.add(new Friend(friend.id, friend.nickName));
+                        tempArrayList.add(new Friend(friend.getId(), friend.getNickName()));
                         if (JOptionPane.showConfirmDialog(frame,
                                 "确定删除该好友吗?\n警告: 该删除操作不可恢复!",
                                 "警告",
@@ -289,5 +297,10 @@ public class ChatListUI {
         dialog.setVisible(true);
     }
 
+
+    public void setUserTitle(String id){
+        User user = UsersContainer.INSTANCE.users.get(callback.id);
+        frame.setTitle("聊天列表 "+user.nickName+"@"+user.id);
+    }
 
 }

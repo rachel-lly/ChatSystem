@@ -29,7 +29,9 @@ public class UserController {
     public boolean login(String id, String password) throws Exception {
         client.login(id, password);
         this.id = id;
+        this.chatListUI.setUserTitle(id);
         this.chatListUI.frame.setVisible(true);
+
         return true;
     }
 
@@ -43,9 +45,9 @@ public class UserController {
     }
 
     public void openChatPanel(Friend friend) {
-        if (chatPanel.get(friend.id) != null) {
+        if (chatPanel.get(friend.getId()) != null) {
         } else {
-            chatPanel.put(friend.id, new ChatUI(this, friend));
+            chatPanel.put(friend.getId(), new ChatUI(this, friend));
         }
     }
 
@@ -60,9 +62,9 @@ public class UserController {
         this.chatListUI.friendsList = friendList;
 
         for (Friend friend : friendList) {
-            if (this.chatPanel.get(friend.id) != null) {
-                this.chatPanel.get(friend.id).friend = friend;
-                this.chatPanel.get(friend.id).update();
+            if (this.chatPanel.get(friend.getId()) != null) {
+                this.chatPanel.get(friend.getId()).friend = friend;
+                this.chatPanel.get(friend.getId()).update();
             }
         }
         this.chatListUI.updateInformation();
@@ -75,10 +77,10 @@ public class UserController {
     public boolean closeChatPanel(Friend friend) {
         boolean res = true;
 
-        if (chatPanel.get(friend.id) == null) {
+        if (chatPanel.get(friend.getId()) == null) {
             res = false;
         } else {
-            chatPanel.remove(friend.id);
+            chatPanel.remove(friend.getId());
         }
 
         return res;
@@ -94,10 +96,10 @@ public class UserController {
 
             for (GroupChat groupChat : groupChats) {
 
-                if (id.equals(groupChat.groupId)) {
+                if (id.equals(groupChat.getGroupId())) {
                     isGroup = true;
-                    Friend sender = new Friend(id, groupChat.groupName);
-                    sender.state = 1;
+                    Friend sender = new Friend(id, groupChat.getGroupName());
+                    sender.setState(1);
                     chatPanel.put(id, new ChatUI(this, sender));
                     break;
                 }
@@ -108,9 +110,9 @@ public class UserController {
 
                Friend sender = new Friend(id, "anonymous");
                for (Friend fri : this.chatListUI.friendsList) {
-                   if (fri.id.equals(id)) {
-                       sender.nickName = fri.nickName;
-                       sender.state = 1;
+                   if (fri.getId().equals(id)) {
+                       sender.setNickName(fri.getNickName());
+                       sender.setState(1);
                        break;
                    }
                }
@@ -120,7 +122,7 @@ public class UserController {
         }
 
 
-        chatPanel.get(id).receiveMsg(msg, type);
+        chatPanel.get(id).receiveMessage(msg,type);
     }
 
     public boolean sendMsg(String id, String msg, int type) throws Exception {

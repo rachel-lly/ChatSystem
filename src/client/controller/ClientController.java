@@ -53,8 +53,8 @@ public class ClientController {
         ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
 
         for(int i=0;i<groupChats.size();i++){
-           if(groupChats.get(i).groupName.equals(groupName)){
-               String id = groupChats.get(i).groupId;
+           if(groupChats.get(i).getGroupName().equals(groupName)){
+               String id = groupChats.get(i).getGroupId();
                byte[] msgData = ClientUtil.PackageUtils.messageGroupPack(id, (byte) type, msg, privateKey);
                try {
                    secondaryPackAndSent(this.clientChannel, msgData, BANDWIDTH_DEFAULT);

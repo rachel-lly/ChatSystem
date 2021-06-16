@@ -2,9 +2,33 @@ package model;
 
 
 public class Friend {
-    public String id;
-    public String nickName;
-    public int state;//0--离线 1--在线
+    private String id;
+    private String nickName;
+    private int state;//0--离线 1--在线
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 
     public Friend(String id, String nickName) {
         this(id, nickName, -1);

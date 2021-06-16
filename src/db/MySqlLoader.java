@@ -16,8 +16,8 @@ public class MySqlLoader {
     public static final String STANDARD_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS `user`(" +
                     "`id` VARCHAR(20) NOT NULL, " +
-                    "`password` VARCHAR(100), " +
-                    "`nickName` VARCHAR(20), " +
+                    "`password` VARCHAR(100) , " +
+                    "`nickName` VARCHAR(20) , " +
                     "PRIMARY KEY ( `id` )" +
                     ");";
 

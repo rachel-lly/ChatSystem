@@ -90,7 +90,7 @@ public class ServerController {
                     ArrayList<String> groupidList = new ArrayList<>();
 
                     for(int i=0;i<groupChats.size();i++){
-                        groupidList.add(groupChats.get(i).groupId);
+                        groupidList.add(groupChats.get(i).getGroupId());
                     }
                     for(String id:groupidList){
                         if(id.equals(resMap.get("id"))){
