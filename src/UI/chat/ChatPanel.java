@@ -28,7 +28,7 @@ public class ChatPanel extends JPanel {
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(seGroup2));
     }
 
-    public void addReceived(String text, int type) {
+    public void addReceiveMessage(String text, int type) {
         JPanel msgPanel = null;
 
         if (type == 1) {
@@ -44,7 +44,7 @@ public class ChatPanel extends JPanel {
         this.updateUI();
     }
 
-    public void addSent(String text, int type) {
+    public void addSendMessage(String text, int type) {
         JPanel msgPanel = null;
 
         if (type == 1) {

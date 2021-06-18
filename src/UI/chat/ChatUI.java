@@ -139,17 +139,17 @@ public class ChatUI {
 
         for (ChatRecord chatRecord : this.chatRecords) {
             if (chatRecord.getState() == 0) {
-                this.chatPanel.addSent(chatRecord.getMessage(), 1);
+                this.chatPanel.addSendMessage(chatRecord.getMessage(), 1);
             } else if (chatRecord.getState() == 1) {
-                this.chatPanel.addReceived(chatRecord.getMessage(), 1);
+                this.chatPanel.addReceiveMessage(chatRecord.getMessage(), 1);
             } else if (chatRecord.getState() == 2) {
-                this.chatPanel.addSent(chatRecord.getMessage(), 2);
+                this.chatPanel.addSendMessage(chatRecord.getMessage(), 2);
             } else if (chatRecord.getState() == 3) {
-                this.chatPanel.addReceived(chatRecord.getMessage(), 2);
+                this.chatPanel.addReceiveMessage(chatRecord.getMessage(), 2);
             } else if (chatRecord.getState() == 4) {
-                this.chatPanel.addSent(chatRecord.getMessage(), 3);
+                this.chatPanel.addSendMessage(chatRecord.getMessage(), 3);
             } else if (chatRecord.getState() == 5) {
-                this.chatPanel.addReceived(chatRecord.getMessage(), 3);
+                this.chatPanel.addReceiveMessage(chatRecord.getMessage(), 3);
             }
         }
     }
@@ -317,7 +317,7 @@ public class ChatUI {
                 }
 
             }
-            this.chatPanel.addSent(message, type);
+            this.chatPanel.addSendMessage(message, type);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,7 +328,7 @@ public class ChatUI {
     }
 
     public void receiveMessage(String message, int type) {
-        this.chatPanel.addReceived(message, type);
+        this.chatPanel.addReceiveMessage(message, type);
 
         if (type == 1) {
             chatRecords.add(new ChatRecord(callback.id, "", message, (byte) 1));
