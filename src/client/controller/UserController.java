@@ -29,7 +29,7 @@ public class UserController {
     public boolean login(String id, String password) throws Exception {
         client.login(id, password);
         this.id = id;
-        this.chatListUI.setUserTitle(id);
+        this.chatListUI.setUserTitle();
         this.chatListUI.frame.setVisible(true);
 
         return true;
@@ -64,10 +64,10 @@ public class UserController {
         for (Friend friend : friendList) {
             if (this.chatPanel.get(friend.getId()) != null) {
                 this.chatPanel.get(friend.getId()).friend = friend;
-                this.chatPanel.get(friend.getId()).update();
+                this.chatPanel.get(friend.getId()).updateMessage();
             }
         }
-        this.chatListUI.updateInformation();
+        this.chatListUI.updateAllList();
     }
 
 

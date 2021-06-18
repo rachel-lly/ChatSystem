@@ -64,11 +64,11 @@ public class ChatListUI {
 
         this.callback = callback;
 
-        init();
-        updateInformation();
+        initView();
+        updateAllList();
     }
 
-    public void updateInformation() {
+    public void updateAllList() {
         this.onLine.removeAllChildren();
         this.offLine.removeAllChildren();
 
@@ -99,7 +99,7 @@ public class ChatListUI {
         this.tree.updateUI();
     }
 
-    public void init() {
+    public void initView() {
 
 
 
@@ -111,7 +111,7 @@ public class ChatListUI {
         this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(createTool(), BorderLayout.NORTH);
+        panel.add(initToolBar(), BorderLayout.NORTH);
 
         treeNode = new DefaultMutableTreeNode("聊天");
 
@@ -179,14 +179,14 @@ public class ChatListUI {
         this.frame.setContentPane(panel);
     }
 
-    public JPanel createTool() {
+    public JPanel initToolBar() {
         JPanel jp = new JPanel();
         jp.setBackground(new Color(196, 232, 188));
         jp.setLayout(new GridLayout(1, 0));
         jp.setPreferredSize(new Dimension(0, 30));
 
         addFriendsButton = DesignUtil.createButton("添加好友");
-        addFriendsButton.addActionListener(e -> addFriendInput());
+        addFriendsButton.addActionListener(e -> addFriend());
 
         jp.add(addFriendsButton);
 
@@ -236,7 +236,7 @@ public class ChatListUI {
 
             callback.addGroupChat(idFieldArea.getText());
             DesignUtil.showInformationMsg("创建群聊成功","提示",null);
-            updateInformation();
+            updateAllList();
             dialog.setVisible(false);
 
         });
@@ -259,7 +259,7 @@ public class ChatListUI {
 
 
     }
-    public void addFriendInput() {
+    public void addFriend() {
         JDialog dialog = new JDialog(this.frame, "请输入添加的好友ID:", true);
         dialog.setBounds(400, 300, 300, 100);
         dialog.setLayout(new BorderLayout());
@@ -298,7 +298,7 @@ public class ChatListUI {
     }
 
 
-    public void setUserTitle(String id){
+    public void setUserTitle(){
         User user = UsersContainer.INSTANCE.users.get(callback.id);
         frame.setTitle("聊天列表 "+user.nickName+"@"+user.id);
     }

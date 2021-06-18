@@ -42,7 +42,7 @@ public class ChatUI {
 
     static String chatIconURL = "/UI/assets/chat_icon.png";
 
-    public void update() {
+    public void updateMessage() {
 
        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
 
@@ -97,13 +97,13 @@ public class ChatUI {
         frame.setResizable(true);
         frame.setLayout(new BorderLayout());
         frame.add(creatSouth(), BorderLayout.SOUTH);
-        frame.add(creatCenter(), BorderLayout.CENTER);
+        frame.add(creatChatBox(), BorderLayout.CENTER);
         frame.setVisible(true);
 
         this.callback = callback;
         this.frame.addWindowListener(new CloseWindow());
         this.loadChatRecord();
-        this.update();
+        this.updateMessage();
     }
 
     public ChatUI(UserController callback, String name) {
@@ -123,13 +123,13 @@ public class ChatUI {
         frame.setResizable(true);
         frame.setLayout(new BorderLayout());
         frame.add(creatSouth(), BorderLayout.SOUTH);
-        frame.add(creatCenter(), BorderLayout.CENTER);
+        frame.add(creatChatBox(), BorderLayout.CENTER);
         frame.setVisible(true);
 
         this.callback = callback;
         this.frame.addWindowListener(new CloseWindow());
 
-        this.update();
+        this.updateMessage();
     }
 
     public void loadChatRecord() {
@@ -154,7 +154,7 @@ public class ChatUI {
         }
     }
 
-    public JScrollPane creatCenter() {
+    public JScrollPane creatChatBox() {
         messageArea = new JTextArea();
         messageArea.setFont(new Font("menlo", Font.BOLD, 17));
 
@@ -197,14 +197,14 @@ public class ChatUI {
         editArea.getInputMap().put(KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), "send");
         editArea.getActionMap().put("send", sendAction);
 
-        jp.add(createTool(), BorderLayout.NORTH);
+        jp.add(createToolBar(), BorderLayout.NORTH);
         jp.add(new JScrollPane(editArea), BorderLayout.CENTER);
         jp.add(sendButton, BorderLayout.SOUTH);
 
         return jp;
     }
 
-    public JPanel createTool() {
+    public JPanel createToolBar() {
         JPanel jp = new JPanel();
         jp.setBackground(new Color(255, 255, 255));
         jp.setLayout(new GridLayout(1, 0));
