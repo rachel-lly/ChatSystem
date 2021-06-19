@@ -5,7 +5,7 @@ import model.Friend;
 import UI.util.DesignUtil;
 import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
-import db.UsersContainer;
+import db.DBImpl;
 import util.FileFolder;
 
 import java.io.File;
@@ -50,7 +50,7 @@ public class ClientController {
         }
 
 
-        ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+        ArrayList<GroupChat> groupChats = DBImpl.INSTANCE.getGroupNameList();
 
         for(int i=0;i<groupChats.size();i++){
            if(groupChats.get(i).getGroupName().equals(groupName)){
@@ -119,7 +119,7 @@ public class ClientController {
             throw new MsgException(1, "Unconnected to server");
         }
 
-        UsersContainer.INSTANCE.setGroupNameList(groupChatName);
+        DBImpl.INSTANCE.setGroupNameList(groupChatName);
 
     }
 

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MySqlLoader {
+public class DBLoader {
 
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/chatsystem?serverTimezone=UTC";
@@ -52,7 +52,7 @@ public class MySqlLoader {
     public Connection connection = null;
     public Statement statement = null;
 
-    public MySqlLoader() throws ClassNotFoundException, SQLException {
+    public DBLoader() throws ClassNotFoundException, SQLException {
         this.init();
     }
 

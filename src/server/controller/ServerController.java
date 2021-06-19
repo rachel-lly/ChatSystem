@@ -5,7 +5,7 @@ import model.GroupChat;
 import org.apache.commons.codec.binary.Hex;
 import model.OnlineUser;
 import model.User;
-import db.UsersContainer;
+import db.DBImpl;
 import server.util.ServerUtil;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -85,7 +85,7 @@ public class ServerController {
 
                     Map<String, String> resMap = ServerUtil.PackageUtils.messageUnPack(msgData, user.publicKey);
 
-                    ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+                    ArrayList<GroupChat> groupChats = DBImpl.INSTANCE.getGroupNameList();
 
                     ArrayList<String> groupidList = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class ServerController {
                     }
 
                     if(!isGroup){
-                        for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
+                        for (String id : DBImpl.INSTANCE.searchFriend(user.user.id)) {
                             if (id.equals(resMap.get("id"))) {
                                 sendMsg(user.user.id, resMap.get("id"), resMap.get("message"), Integer.parseInt(resMap.get("msgType")));
                             }
@@ -117,11 +117,11 @@ public class ServerController {
                     ArrayList<String> FriendStrings = ServerUtil.PackageUtils.friendListUnPack(msgData, user.publicKey);
                     if (msgData.get(1) == 1) {
                         for (String id : FriendStrings) {
-                            if (UsersContainer.INSTANCE.users.get(id) == null) {
+                            if (DBImpl.INSTANCE.users.get(id) == null) {
                                 secondaryPackAndSent(sc, ServerUtil.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
-                            UsersContainer.INSTANCE.connectFriend(user.user.id, id);
+                            DBImpl.INSTANCE.connectFriend(user.user.id, id);
 
                             try {
                                 if (onlineUserList.get(id) != null) {
@@ -133,11 +133,11 @@ public class ServerController {
                         }
                     } else if (msgData.get(1) == 2) {
                         for (String id : FriendStrings) {
-                            if (UsersContainer.INSTANCE.users.get(id) == null) {
+                            if (DBImpl.INSTANCE.users.get(id) == null) {
                                 secondaryPackAndSent(sc, ServerUtil.PackageUtils.errorPack((byte) 4, "Id:" + id + "not exist！"), BANDWIDTH);
                                 break;
                             }
-                            UsersContainer.INSTANCE.deleteFriend(user.user.id, id);
+                            DBImpl.INSTANCE.deleteFriend(user.user.id, id);
 
                             try {
                                 if (onlineUserList.get(id) != null) {
@@ -158,7 +158,7 @@ public class ServerController {
                     System.out.println("name：" + resMap.get("name"));
 
 
-                    for (String id : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
+                    for (String id : DBImpl.INSTANCE.searchFriend(user.user.id)) {
                         if (id.equals(resMap.get("id")) && onlineUserList.get(resMap.get("id")) != null) {
 
                             byte[] data = ServerUtil.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
@@ -261,7 +261,7 @@ public class ServerController {
 
     public void updateFriendList(OnlineUser user) {
         try {
-            ArrayList<User> friendList = UsersContainer.INSTANCE.searchFriendAsUser(user.user.id);
+            ArrayList<User> friendList = DBImpl.INSTANCE.searchFriendAsUser(user.user.id);
             boolean[] onLine = new boolean[friendList.size()];
 
 
@@ -272,7 +272,7 @@ public class ServerController {
             secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.friendListPack((byte) 1,
                     friendList, onLine,
                     user.privateKey), BANDWIDTH);
-            friendList = UsersContainer.INSTANCE.searchApplyFriendAsUser(user.user.id);
+            friendList = DBImpl.INSTANCE.searchApplyFriendAsUser(user.user.id);
             onLine = new boolean[friendList.size()];
             secondaryPackAndSent(user.socketChannel, ServerUtil.PackageUtils.friendListPack((byte) 2,
                     friendList, onLine,
@@ -285,7 +285,7 @@ public class ServerController {
 
 
     public void userLogOut(OnlineUser user) {
-        for (String friendId : UsersContainer.INSTANCE.searchFriend(user.user.id)) {
+        for (String friendId : DBImpl.INSTANCE.searchFriend(user.user.id)) {
             if (onlineUserList.get(friendId) != null) {
                 updateFriendList(onlineUserList.get(friendId));
             }
@@ -315,7 +315,7 @@ public class ServerController {
                             signInMsg.flip();
                             if (signInMsg.get(0) == 1) {
                                 Map<String, String> infoMap = ServerUtil.PackageUtils.loginUnPack(signInMsg);
-                                User targetUser = UsersContainer.INSTANCE.users.get(infoMap.get("id"));
+                                User targetUser = DBImpl.INSTANCE.users.get(infoMap.get("id"));
 
                                 if (targetUser == null) {
                                     try {
@@ -382,7 +382,7 @@ public class ServerController {
                                 LoopingMessageHandler msgHandler = new LoopingMessageHandler(sc, targetOnlineUser);
                                 sc.read(msgHandler.msgData, null, msgHandler);
 
-                                for (String friendId : UsersContainer.INSTANCE.searchFriend(targetOnlineUser.user.id)) {
+                                for (String friendId : DBImpl.INSTANCE.searchFriend(targetOnlineUser.user.id)) {
                                     if (onlineUserList.get(friendId) != null) {
                                         updateFriendList(onlineUserList.get(friendId));
                                     }

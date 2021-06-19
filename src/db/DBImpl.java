@@ -8,18 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class UsersContainer {
+public class DBImpl {
     public Map<String, User> users = null;
-    public MySqlLoader mysqlLoader = null;
-    public static final UsersContainer INSTANCE = new UsersContainer();
+    public DBLoader dbLoader = null;
+    public static final DBImpl INSTANCE = new DBImpl();
 
-    private UsersContainer() {
+    private DBImpl() {
         this.init();
     }
 
     private void init() {
         try {
-            mysqlLoader = new MySqlLoader();
+            dbLoader = new DBLoader();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -35,23 +35,23 @@ public class UsersContainer {
     }
 
     public boolean connectFriend(String srcId, String dstId) {
-        this.mysqlLoader.connectFriend(srcId, dstId);
+        this.dbLoader.connectFriend(srcId, dstId);
         return true;
     }
 
     public boolean deleteFriend(String srcId, String dstId) {
-        this.mysqlLoader.deleteFriend(srcId, dstId);
+        this.dbLoader.deleteFriend(srcId, dstId);
         return true;
     }
 
     public ArrayList<String> searchFriend(String srcId) {
-        return this.mysqlLoader.searchFriend(srcId);
+        return this.dbLoader.searchFriend(srcId);
     }
 
     public ArrayList<User> searchFriendAsUser(String srcId) {
         ArrayList<User> res = new ArrayList<>();
 
-        for (String id : this.mysqlLoader.searchFriend(srcId)) {
+        for (String id : this.dbLoader.searchFriend(srcId)) {
             res.add(this.users.get(id));
         }
         return res;
@@ -60,21 +60,21 @@ public class UsersContainer {
     public ArrayList<User> searchApplyFriendAsUser(String srcId) {
         ArrayList<User> res = new ArrayList<>();
 
-        for (String id : this.mysqlLoader.searchApplyFriend(srcId)) {
+        for (String id : this.dbLoader.searchApplyFriend(srcId)) {
             res.add(this.users.get(id));
         }
         return res;
     }
 
     public void loadData() {
-        this.mysqlLoader.loadUsers(this.users);
+        this.dbLoader.loadUsers(this.users);
     }
 
     public ArrayList<GroupChat> getGroupNameList(){
-        return this.mysqlLoader.getGroupName();
+        return this.dbLoader.getGroupName();
     }
 
     public void setGroupNameList(String groupNameList){
-        this.mysqlLoader.setGroupName(groupNameList);
+        this.dbLoader.setGroupName(groupNameList);
     }
 }

@@ -6,7 +6,7 @@ import model.Friend;
 import UI.chatList.ChatListUI;
 import UI.util.DesignUtil;
 import model.GroupChat;
-import db.UsersContainer;
+import db.DBImpl;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class UserController {
 
         if (chatPanel.get(id) == null) {
 
-           ArrayList<GroupChat> groupChats = UsersContainer.INSTANCE.getGroupNameList();
+           ArrayList<GroupChat> groupChats = DBImpl.INSTANCE.getGroupNameList();
 
             for (GroupChat groupChat : groupChats) {
 

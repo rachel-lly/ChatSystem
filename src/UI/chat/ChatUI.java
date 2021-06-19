@@ -8,7 +8,7 @@ import model.ChatRecord;
 import util.ChatRecordManager;
 import client.util.ClientUtil;
 import model.GroupChat;
-import db.UsersContainer;
+import db.DBImpl;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Area;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class ChatUI {
 
     public void updateMessage() {
 
-       ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+       ArrayList<GroupChat> list = DBImpl.INSTANCE.getGroupNameList();
 
        for(int i=0;i<list.size();i++){
            if(groupName.equals(list.get(i).getGroupName())){

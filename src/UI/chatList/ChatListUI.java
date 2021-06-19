@@ -5,10 +5,8 @@ import UI.util.DesignUtil;
 import client.controller.UserController;
 import model.Friend;
 import model.GroupChat;
-import db.UsersContainer;
-import model.OnlineUser;
+import db.DBImpl;
 import model.User;
-import server.controller.ServerController;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -55,7 +53,7 @@ public class ChatListUI {
     public ChatListUI(ArrayList<Friend> friendsList,
                       UserController callback) {
 
-        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+        ArrayList<GroupChat> list = DBImpl.INSTANCE.getGroupNameList();
         for(int i=0;i<list.size();i++){
             this.groupNameList.add(list.get(i).getGroupName());
         }
@@ -83,7 +81,7 @@ public class ChatListUI {
             }
         }
 
-        ArrayList<GroupChat> list = UsersContainer.INSTANCE.getGroupNameList();
+        ArrayList<GroupChat> list = DBImpl.INSTANCE.getGroupNameList();
         ArrayList<String> slist = new ArrayList<>();
         for(int i=0;i<list.size();i++){
             slist.add(list.get(i).getGroupName());
@@ -132,7 +130,7 @@ public class ChatListUI {
 
         this.tree.addTreeSelectionListener(e -> {
             try {
-                ArrayList<GroupChat> grouplist = UsersContainer.INSTANCE.getGroupNameList();
+                ArrayList<GroupChat> grouplist = DBImpl.INSTANCE.getGroupNameList();
                 ArrayList<String> groupNameList = new ArrayList<>();
                 for(int i=0;i<grouplist.size();i++){
                     groupNameList.add(grouplist.get(i).getGroupName());
@@ -169,10 +167,6 @@ public class ChatListUI {
 
             }
         });
-
-
-
-
 
         panel.add(new JScrollPane(tree), BorderLayout.CENTER);
 
@@ -299,7 +293,7 @@ public class ChatListUI {
 
 
     public void setUserTitle(){
-        User user = UsersContainer.INSTANCE.users.get(callback.id);
+        User user = DBImpl.INSTANCE.users.get(callback.id);
         frame.setTitle("聊天列表 "+user.nickName+"@"+user.id);
     }
 
