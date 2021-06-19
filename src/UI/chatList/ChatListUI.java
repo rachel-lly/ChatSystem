@@ -151,7 +151,7 @@ public class ChatListUI {
                         ArrayList<Friend> tempArrayList = new ArrayList<>();
                         tempArrayList.add(new Friend(friend.getId(), friend.getNickName()));
                         if (JOptionPane.showConfirmDialog(frame,
-                                "确定删除该好友吗?\n警告: 该删除操作不可恢复!",
+                                "确定删除该好友吗?",
                                 "警告",
                                 JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                             callback.deleteFriends(tempArrayList);
