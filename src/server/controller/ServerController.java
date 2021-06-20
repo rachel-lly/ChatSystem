@@ -70,6 +70,19 @@ public class ServerController {
 
         public void process(String md5) {
 
+
+
+
+
+            ArrayList<GroupChat> groupChats = DBImpl.INSTANCE.getGroupNameList();
+
+            ArrayList<String> groupidList = new ArrayList<>();
+
+            for(int i=0;i<groupChats.size();i++){
+                groupidList.add(groupChats.get(i).getGroupId());
+            }
+
+
             if (bufferDataMap.get(user.user.id).get(md5) == null) {
                 return;
             }
@@ -80,18 +93,10 @@ public class ServerController {
 
             try {
 
-
                 if (msgData.get(0) == 3) {
 
                     Map<String, String> resMap = ServerUtil.PackageUtils.messageUnPack(msgData, user.publicKey);
 
-                    ArrayList<GroupChat> groupChats = DBImpl.INSTANCE.getGroupNameList();
-
-                    ArrayList<String> groupidList = new ArrayList<>();
-
-                    for(int i=0;i<groupChats.size();i++){
-                        groupidList.add(groupChats.get(i).getGroupId());
-                    }
                     for(String id:groupidList){
                         if(id.equals(resMap.get("id"))){
                             isGroup = true;
@@ -153,26 +158,66 @@ public class ServerController {
 
                 if (msgData.get(0) == 6) {
                     Map<String, Object> resMap = ServerUtil.PackageUtils.fileUnPack(msgData, user.publicKey);
-                    System.out.println("receive file");
-                    System.out.println("To：" + resMap.get("id"));
-                    System.out.println("name：" + resMap.get("name"));
 
 
-                    for (String id : DBImpl.INSTANCE.searchFriend(user.user.id)) {
-                        if (id.equals(resMap.get("id")) && onlineUserList.get(resMap.get("id")) != null) {
+                    for(String id:groupidList){
+                        if(id.equals(resMap.get("id"))){
+                            isGroup = true;
+                            for(String onlineId:onlineUserList.keySet()){
+                                if(!onlineId.equals(user.user.id)){
 
-                            byte[] data = ServerUtil.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
-                            new Thread(
-                                    () -> {
-                                        try {
-                                            secondaryPackAndSentWithLimit(onlineUserList.get(id).socketChannel, data, BANDWIDTH);
-                                        } catch (InterruptedException | ExecutionException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                            ).start();
+
+                                    System.out.println("receive file");
+                                    System.out.println("To：" + onlineId);
+                                    System.out.println("name：" + resMap.get("name"));
+
+
+                                    byte[] data = ServerUtil.PackageUtils.filePack((String)resMap.get("id"), (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(onlineId).privateKey);
+                                    new Thread(
+                                            () -> {
+                                                try {
+                                                    secondaryPackAndSentWithLimit(onlineUserList.get(onlineId).socketChannel, data, BANDWIDTH);
+                                                } catch (InterruptedException | ExecutionException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                    ).start();
+                                }
+
+                            }
+
                         }
                     }
+
+                    if(!isGroup){
+
+                        System.out.println("receive file");
+                        System.out.println("To：" + resMap.get("id"));
+                        System.out.println("name：" + resMap.get("name"));
+
+
+                        for (String id : DBImpl.INSTANCE.searchFriend(user.user.id)) {
+                            if (id.equals(resMap.get("id")) && onlineUserList.get(resMap.get("id")) != null) {
+
+                                byte[] data = ServerUtil.PackageUtils.filePack(user.user.id, (String) resMap.get("name"), (byte[]) resMap.get("file"), onlineUserList.get(id).privateKey);
+                                new Thread(
+                                        () -> {
+                                            try {
+                                                secondaryPackAndSentWithLimit(onlineUserList.get(id).socketChannel, data, BANDWIDTH);
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                ).start();
+                            }
+                        }
+
+                    }
+
+
+
+
+
 
                 }
             } catch (Exception e) {
